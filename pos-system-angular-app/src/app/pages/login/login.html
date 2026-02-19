@@ -1,0 +1,172 @@
+<div
+  class="min-h-screen flex items-center justify-center bg-grey-olive-50 px-4 py-12"
+>
+  <div
+    class="max-w-md w-full space-y-8 bg-white p-8 rounded-3xl shadow-xl border border-soft-linen-100 transform transition-all duration-500 animate-in fade-in slide-in-from-bottom-4"
+  >
+    <div class="text-center">
+      <div
+        class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-soft-linen-50 text-soft-linen-600 mb-6 shadow-inner ring-4 ring-soft-linen-100/50"
+      >
+        <i class="ph-fill ph-storefront text-4xl"></i>
+      </div>
+      <h2 class="text-3xl font-extrabold text-pale-slate-900 tracking-tight">
+        Mi Tienda POS
+      </h2>
+      <p class="mt-2 text-sm text-pale-slate-500 font-medium">
+        Gestiona tu negocio con eficiencia
+      </p>
+    </div>
+
+    <form
+      [formGroup]="loginForm"
+      (ngSubmit)="onSubmit()"
+      class="mt-10 space-y-6"
+    >
+      <div class="space-y-5">
+        <!-- Input Usuario -->
+        <div>
+          <label
+            for="username"
+            class="block text-sm font-semibold text-pale-slate-700 mb-1.5 ml-1"
+            >Usuario</label
+          >
+          <div class="relative group">
+            <div
+              class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-pale-slate-400 group-focus-within:text-soft-linen-600 transition-colors"
+            >
+              <i class="ph ph-user text-lg"></i>
+            </div>
+            <input
+              id="username"
+              type="text"
+              formControlName="username"
+              class="block w-full pl-11 pr-4 py-3 bg-grey-olive-50/50 border border-soft-linen-200 rounded-2xl text-pale-slate-900 placeholder-pale-slate-400 focus:outline-none focus:ring-2 focus:ring-soft-linen-500/20 focus:border-soft-linen-500 transition-all sm:text-sm"
+              placeholder="Nombre de usuario"
+              [ngClass]="{'border-red-500 ring-red-100 bg-red-50/30': loginForm.get('username')?.touched && loginForm.get('username')?.invalid}"
+            />
+          </div>
+          @if (loginForm.get('username')?.touched &&
+          loginForm.get('username')?.errors?.['required']) {
+          <p class="mt-1.5 text-xs text-red-500 ml-1 flex items-center gap-1">
+            <i class="ph ph-warning-circle"></i> El usuario es obligatorio
+          </p>
+          } @if (loginForm.get('username')?.touched &&
+          loginForm.get('username')?.errors?.['minlength']) {
+          <p class="mt-1.5 text-xs text-red-500 ml-1 flex items-center gap-1">
+            <i class="ph ph-warning-circle"></i> Mínimo 5 caracteres
+          </p>
+          }
+        </div>
+
+        <!-- Input Password -->
+        <div>
+          <label
+            for="password"
+            class="block text-sm font-semibold text-pale-slate-700 mb-1.5 ml-1"
+            >Contraseña</label
+          >
+          <div class="relative group">
+            <div
+              class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-pale-slate-400 group-focus-within:text-soft-linen-600 transition-colors"
+            >
+              <i class="ph ph-lock text-lg"></i>
+            </div>
+            <input
+              id="password"
+              [type]="showPassword() ? 'text' : 'password'"
+              formControlName="password"
+              class="block w-full pl-11 pr-12 py-3 bg-grey-olive-50/50 border border-soft-linen-200 rounded-2xl text-pale-slate-900 placeholder-pale-slate-400 focus:outline-none focus:ring-2 focus:ring-soft-linen-500/20 focus:border-soft-linen-500 transition-all sm:text-sm"
+              placeholder="••••••••"
+              [ngClass]="{'border-red-500 ring-red-100 bg-red-50/30': loginForm.get('password')?.touched && loginForm.get('password')?.invalid}"
+            />
+            <button
+              type="button"
+              (click)="togglePassword()"
+              class="absolute inset-y-0 right-0 pr-4 flex items-center text-pale-slate-400 hover:text-soft-linen-600 transition-colors"
+            >
+              <i
+                class="ph text-lg"
+                [ngClass]="showPassword() ? 'ph-eye-slash' : 'ph-eye'"
+              ></i>
+            </button>
+          </div>
+          @if (loginForm.get('password')?.touched &&
+          loginForm.get('password')?.errors?.['required']) {
+          <p class="mt-1.5 text-xs text-red-500 ml-1 flex items-center gap-1">
+            <i class="ph ph-warning-circle"></i> La contraseña es obligatoria
+          </p>
+          } @if (loginForm.get('password')?.touched &&
+          loginForm.get('password')?.errors?.['minlength']) {
+          <p class="mt-1.5 text-xs text-red-500 ml-1 flex items-center gap-1">
+            <i class="ph ph-warning-circle"></i> Mínimo 6 caracteres
+          </p>
+          }
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between px-1">
+        <div class="flex items-center">
+          <input
+            id="remember-me"
+            name="remember-me"
+            type="checkbox"
+            class="h-4 w-4 text-soft-linen-600 focus:ring-soft-linen-500/20 border-soft-linen-300 rounded-lg cursor-pointer"
+          />
+          <label
+            for="remember-me"
+            class="ml-2 block text-sm text-pale-slate-600 cursor-pointer hover:text-pale-slate-900 transition-colors"
+            >Recordarme</label
+          >
+        </div>
+        <div class="text-sm">
+          <a
+            href="#"
+            class="font-semibold text-soft-linen-600 hover:text-soft-linen-700 transition-colors"
+            >¿Olvidaste tu clave?</a
+          >
+        </div>
+      </div>
+
+      <button
+        type="submit"
+        [disabled]="loginForm.invalid || isLoading()"
+        class="relative w-full flex justify-center py-3.5 px-4 border border-transparent rounded-2xl shadow-lg text-sm font-bold text-white bg-soft-linen-600 hover:bg-soft-linen-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-soft-linen-500 disabled:opacity-70 disabled:cursor-not-allowed transition-all active:scale-[0.98]"
+      >
+        @if (isLoading()) {
+        <svg
+          class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"
+          ></circle>
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          ></path>
+        </svg>
+        Autenticando... } @else { Acceder }
+      </button>
+    </form>
+
+    <div class="pt-6 border-t border-soft-linen-100">
+      <p class="text-center text-sm text-pale-slate-500">
+        ¿Problemas para entrar?
+        <a
+          href="#"
+          class="font-bold text-soft-linen-600 hover:text-soft-linen-700 transition-colors"
+          >Soporte Técnico</a
+        >
+      </p>
+    </div>
+  </div>
+</div>

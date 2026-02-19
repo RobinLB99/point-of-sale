@@ -1,0 +1,22 @@
+:host {
+  display: contents;
+}
+
+/*
+   Solución definitiva para el "Bottom Hidden":
+   Usamos dvh (Dynamic Viewport Height) para que el panel
+   se ajuste al área visible real del navegador.
+*/
+.panel-container {
+  max-height: 85dvh;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.bottom-bar-safe {
+  padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+}
+
+/* Asegurar que el scroll no se "coma" el último elemento */
+.scroll-area-mobile {
+  padding-bottom: 2rem;
+}

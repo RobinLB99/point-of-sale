@@ -1,0 +1,94 @@
+/* You can add global styles to this file, and also import other style files */
+@import "tailwindcss";
+
+@theme {
+  /* Soft Linen */
+  --color-soft-linen-50: #f3f4f0;
+  --color-soft-linen-100: #e6e9e2;
+  --color-soft-linen-200: #cdd4c4;
+  --color-soft-linen-300: #b4bea7;
+  --color-soft-linen-400: #9ba88a;
+  --color-soft-linen-500: #82936c;
+  --color-soft-linen-600: #687557;
+  --color-soft-linen-700: #4e5841;
+  --color-soft-linen-800: #343b2b;
+  --color-soft-linen-900: #1a1d16;
+  --color-soft-linen-950: #12150f;
+
+  /* Pale Slate */
+  --color-pale-slate-50: #f0f1f4;
+  --color-pale-slate-100: #e2e4e9;
+  --color-pale-slate-200: #c5c9d3;
+  --color-pale-slate-300: #a8aebd;
+  --color-pale-slate-400: #8b92a7;
+  --color-pale-slate-500: #6e7791;
+  --color-pale-slate-600: #585f74;
+  --color-pale-slate-700: #424857;
+  --color-pale-slate-800: #2c303a;
+  --color-pale-slate-900: #16181d;
+  --color-pale-slate-950: #0f1114;
+
+  /* Cool Slate */
+  --color-cool-slate-50: #f0f0f5;
+  --color-cool-slate-100: #e1e1ea;
+  --color-cool-slate-200: #c2c4d6;
+  --color-cool-slate-300: #a4a6c1;
+  --color-cool-slate-400: #8689ac;
+  --color-cool-slate-500: #676b98;
+  --color-cool-slate-600: #535679;
+  --color-cool-slate-700: #3e405b;
+  --color-cool-slate-800: #292b3d;
+  --color-cool-slate-900: #15151e;
+  --color-cool-slate-950: #0e0f15;
+
+  /* Lavender Grey */
+  --color-lavender-grey-50: #efeff6;
+  --color-lavender-grey-100: #dedfed;
+  --color-lavender-grey-200: #bebeda;
+  --color-lavender-grey-300: #9d9ec8;
+  --color-lavender-grey-400: #7c7db6;
+  --color-lavender-grey-500: #5c5da3;
+  --color-lavender-grey-600: #494a83;
+  --color-lavender-grey-700: #373862;
+  --color-lavender-grey-800: #252541;
+  --color-lavender-grey-900: #121321;
+  --color-lavender-grey-950: #0d0d17;
+
+  /* Grey Olive */
+  --color-grey-olive-50: #f2f3f1;
+  --color-grey-olive-100: #e6e7e4;
+  --color-grey-olive-200: #cccfc9;
+  --color-grey-olive-300: #b3b7ae;
+  --color-grey-olive-400: #999f93;
+  --color-grey-olive-500: #808778;
+  --color-grey-olive-600: #666c60;
+  --color-grey-olive-700: #4d5148;
+  --color-grey-olive-800: #333630;
+  --color-grey-olive-900: #1a1b18;
+  --color-grey-olive-950: #121311;
+}
+
+/* Estilos para Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 20px;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Safe Area Utility */
+.safe-area-pb {
+  padding-bottom: env(safe-area-inset-bottom);
+}

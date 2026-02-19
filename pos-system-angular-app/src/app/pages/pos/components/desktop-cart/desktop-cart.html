@@ -1,0 +1,103 @@
+<aside
+  class="flex w-full h-full bg-white border-l border-grey-olive-200 flex-col shadow-xl z-20"
+>
+  <div class="p-4 border-b border-grey-olive-100 bg-grey-olive-50/50">
+    <div class="flex items-center justify-between mb-3">
+      <h3 class="font-bold text-pale-slate-900 flex items-center gap-2">
+        <i class="ph-fill ph-receipt text-soft-linen-600"></i> Ticket Actual
+      </h3>
+      <span
+        class="text-xs bg-white border border-grey-olive-200 text-pale-slate-500 px-2 py-0.5 rounded font-mono"
+        >#0045</span
+      >
+    </div>
+    <button
+      class="w-full flex items-center justify-between bg-white border border-grey-olive-200 rounded-lg px-3 py-2 text-sm text-pale-slate-600 hover:border-soft-linen-400 transition-colors shadow-sm"
+    >
+      <span class="flex items-center gap-2"
+        ><i class="ph ph-user"></i> Consumidor Final</span
+      >
+      <i class="ph-bold ph-caret-down text-grey-olive-400"></i>
+    </button>
+  </div>
+
+  <!-- Cart Items List (Desktop) -->
+  <div class="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar">
+    @for (item of cartItems(); track $index) {
+    <div class="flex gap-3 group mb-3">
+      <div
+        class="w-10 h-10 bg-grey-olive-100 rounded-lg flex items-center justify-center flex-shrink-0"
+      >
+        <i class="ph {{ item.img }} text-grey-olive-400"></i>
+      </div>
+      <div class="flex-1">
+        <div class="flex justify-between items-start mb-1">
+          <h5
+            class="text-sm font-semibold text-pale-slate-800 leading-tight line-clamp-2"
+          >
+            {{ item.nombre }}
+          </h5>
+          <span class="font-bold text-sm text-pale-slate-900"
+            >{{ (item.precio * item.cantidad) | currency:'USD':'symbol':'1.2-2'
+            }}</span
+          >
+        </div>
+        <div class="flex items-center justify-between">
+          <p class="text-xs text-grey-olive-500">
+            {{ item.precio | currency:'USD':'symbol':'1.2-2' }} u
+          </p>
+          <div
+            class="flex items-center bg-white rounded-md border border-grey-olive-200 shadow-sm h-6"
+          >
+            <button
+              (click)="updateQuantity(item.id, -1)"
+              class="px-2 h-full flex items-center text-pale-slate-400 hover:text-red-500 rounded-l-md"
+            >
+              <i class="ph-bold ph-minus text-[10px]"></i>
+            </button>
+            <span
+              class="text-xs font-semibold px-1 min-w-[1.5rem] text-center text-pale-slate-700"
+              >{{ item.cantidad }}</span
+            >
+            <button
+              (click)="updateQuantity(item.id, 1)"
+              class="px-2 h-full flex items-center text-pale-slate-400 hover:text-green-600 rounded-r-md"
+            >
+              <i class="ph-bold ph-plus text-[10px]"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    }
+
+  </div>
+
+  <div
+    class="p-5 bg-white border-t border-grey-olive-200 shadow-[0_-4px_20px_-5px_rgba(0,0,0,0.1)]"
+  >
+    <div class="space-y-1 mb-4">
+      <div class="flex justify-between text-sm text-grey-olive-500">
+        <span>Subtotal</span
+        ><span>{{ cartSubtotal() | currency:'USD':'symbol':'1.2-2' }}</span>
+      </div>
+      <div class="flex justify-between text-sm text-grey-olive-500">
+        <span>Impuestos</span><span>$0.00</span>
+      </div>
+      <div
+        class="flex justify-between text-2xl font-bold text-pale-slate-900 pt-3 mt-2 border-t border-dashed border-grey-olive-200"
+      >
+        <span>Total</span
+        ><span class="text-soft-linen-700"
+          >{{ cartTotal() | currency:'USD':'symbol':'1.2-2' }}</span
+        >
+      </div>
+    </div>
+    <button
+      (click)="checkout.emit()"
+      class="w-full bg-soft-linen-600 hover:bg-soft-linen-500 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-soft-linen-900/20 flex items-center justify-center gap-2 transition-all transform active:scale-[0.98]"
+    >
+      <i class="ph-bold ph-money text-xl"></i><span>Cobrar</span>
+    </button>
+  </div>
+</aside>

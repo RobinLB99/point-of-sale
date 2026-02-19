@@ -1,0 +1,156 @@
+<!-- Main Content (replaces <main> from legacy) -->
+<div class="flex flex-col h-full overflow-hidden relative">
+  <!-- Header -->
+  <header
+    class="h-16 bg-white border-b border-grey-olive-200 flex items-center justify-between px-4 shadow-sm z-10 flex-shrink-0"
+  >
+    <div class="flex items-center gap-3">
+      <button
+        (click)="toggleSidebar()"
+        class="lg:hidden text-pale-slate-700 p-2 -ml-2 rounded-md hover:bg-grey-olive-100"
+      >
+        <i class="ph ph-list text-2xl"></i>
+      </button>
+      <h1 class="font-bold text-pale-slate-900 text-lg leading-tight">
+        Venta
+        <span class="hidden sm:inline text-grey-olive-400 font-normal"
+          >/ Caja 1</span
+        >
+      </h1>
+    </div>
+
+    <div class="hidden md:block flex-1 max-w-md mx-8">
+      <div class="relative group">
+        <i
+          class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-pale-slate-400 group-focus-within:text-soft-linen-500"
+        ></i>
+        <input
+          type="text"
+          id="buscador-desktop"
+          (keyup)="onSearch($event)"
+          placeholder="Filtrar productos en pantalla..."
+          class="w-full pl-10 pr-4 py-2 bg-grey-olive-100 border-transparent focus:bg-white border focus:border-soft-linen-500 rounded-lg text-sm focus:outline-none transition-all"
+        />
+      </div>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <button
+        (click)="clearCart()"
+        class="text-pale-slate-500 hover:text-red-500 p-2 rounded-full hover:bg-red-50 transition-colors"
+        title="Limpiar Venta"
+      >
+        <i class="ph ph-trash text-xl"></i>
+      </button>
+    </div>
+  </header>
+
+  <div class="flex-1 flex overflow-hidden relative">
+    <!-- Product Grid Area -->
+    <div class="flex-1 overflow-y-auto custom-scrollbar bg-grey-olive-50">
+      <div class="p-4 pb-32 lg:pb-8 max-w-7xl mx-auto">
+        <!-- Mobile Search -->
+        <div class="md:hidden mb-4 relative">
+          <i
+            class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-pale-slate-400"
+          ></i>
+          <input
+            type="text"
+            (keyup)="onSearch($event)"
+            placeholder="Filtrar producto..."
+            class="w-full pl-10 pr-4 py-3 bg-white border border-grey-olive-200 rounded-xl shadow-sm focus:outline-none focus:border-soft-linen-500 text-base"
+          />
+        </div>
+
+        <!-- Categories -->
+        <div
+          class="flex gap-2 overflow-x-auto pb-4 mb-2 scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0"
+        >
+          <button
+            *ngFor="let cat of categories()"
+            (click)="setCategory(cat)"
+            [class.bg-pale-slate-800]="selectedCategory() === cat"
+            [class.text-white]="selectedCategory() === cat"
+            [class.bg-white]="selectedCategory() !== cat"
+            [class.text-pale-slate-600]="selectedCategory() !== cat"
+            [class.border]="selectedCategory() !== cat"
+            [class.border-grey-olive-200]="selectedCategory() !== cat"
+            class="px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap shadow-sm hover:shadow-md transition-all duration-200"
+          >
+            {{ cat === 'all' ? 'Todo' : cat }}
+          </button>
+        </div>
+
+        <!-- Product Grid -->
+        <div class="relative min-h-[200px]">
+          <div
+            id="grid-productos"
+            class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 sm:gap-4"
+          >
+            <!-- Product Card -->
+            <button
+              *ngFor="let p of filteredProducts()"
+              (click)="addToCart(p)"
+              [disabled]="getStockRemaining(p) <= 0"
+              class="producto-card bg-white p-2 sm:p-3 rounded-xl border border-grey-olive-200 shadow-sm hover:shadow-lg hover:border-soft-linen-400 hover:-translate-y-1 transition-all group text-left flex flex-col h-full relative overflow-hidden"
+              [class.opacity-50]="getStockRemaining(p) <= 0"
+              [class.cursor-not-allowed]="getStockRemaining(p) <= 0"
+              [class.grayscale]="getStockRemaining(p) <= 0"
+            >
+              <div
+                class="absolute top-2 right-2 text-[10px] font-bold px-2 py-0.5 rounded-full z-10"
+                [ngClass]="{
+                  'bg-grey-olive-100 text-grey-olive-600': getStockRemaining(p) > 0,
+                  'bg-red-100 text-red-600': getStockRemaining(p) <= 0
+                }"
+              >
+                {{ getStockRemaining(p) > 0 ? 'Stock: ' + getStockRemaining(p) :
+                'Agotado' }}
+              </div>
+              <div
+                class="aspect-square bg-grey-olive-50 rounded-lg mb-2 sm:mb-3 flex items-center justify-center text-grey-olive-300 group-hover:bg-soft-linen-50 transition-colors"
+              >
+                <i class="ph {{ p.img }} text-3xl sm:text-4xl"></i>
+              </div>
+              <div class="flex-1 min-h-[3rem]">
+                <h4
+                  class="font-semibold text-pale-slate-800 text-xs sm:text-sm leading-tight mb-1 line-clamp-2"
+                >
+                  {{ p.nombre }}
+                </h4>
+                <p class="text-[10px] sm:text-xs text-grey-olive-500">
+                  {{ p.categoria }}
+                </p>
+              </div>
+              <div
+                class="mt-2 flex justify-between items-end border-t border-grey-olive-50 pt-2"
+              >
+                <span class="font-bold text-base sm:text-lg text-soft-linen-700"
+                  >{{ p.precio | currency:'USD':'symbol':'1.2-2' }}</span
+                >
+                <div
+                  class="w-7 h-7 rounded-full bg-soft-linen-100 text-soft-linen-600 flex items-center justify-center group-hover:bg-soft-linen-600 group-hover:text-white transition-colors shadow-sm"
+                >
+                  <i class="ph-bold ph-plus text-xs"></i>
+                </div>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Desktop Cart Sidebar -->
+    <app-desktop-cart
+      class="hidden lg:flex w-96"
+      (checkout)="procesarVenta()"
+    ></app-desktop-cart>
+  </div>
+
+  <!-- Mobile Cart Components -->
+  <app-mobile-cart
+    [isOpen]="isCartMobileOpen()"
+    (toggle)="toggleCartMobile()"
+    (checkout)="procesarVenta()"
+  ></app-mobile-cart>
+</div>

@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Punto de Venta | Mi Tienda</title>
+
+    <script src="assets/js/htmx.min.js"></script>
+    <script src="assets/js/tailwindcss-3.4.min.js"></script>
+    <script src="assets/js/tailwind.config.js"></script>
+
+    <link rel="stylesheet" href="assets/phosphor-icons/bold/style.css" />
+    <link rel="stylesheet" href="assets/phosphor-icons/duotone/style.css" />
+    <link rel="stylesheet" href="assets/phosphor-icons/fill/style.css" />
+    <link rel="stylesheet" href="assets/phosphor-icons/light/style.css" />
+    <link rel="stylesheet" href="assets/phosphor-icons/regular/style.css" />
+    <link rel="stylesheet" href="assets/phosphor-icons/thin/style.css" />
+    <link rel="stylesheet" href="assets/css/scrollbar.css" />
+  </head>
+
+  <body
+    class="bg-grey-olive-50 text-pale-slate-800 font-sans h-screen flex overflow-hidden"
+  >
+    <div
+      id="mobile-overlay"
+      onclick="toggleSidebar()"
+      class="fixed inset-0 bg-pale-slate-900/50 z-20 hidden lg:hidden transition-opacity opacity-0"
+    ></div>
+
+    <aside
+      id="sidebar"
+      class="fixed inset-y-0 left-0 z-30 w-72 bg-pale-slate-900 text-pale-slate-400 flex flex-col shadow-2xl transform -translate-x-full lg:static lg:translate-x-0 font-sans border-r border-pale-slate-800 transition-transform duration-300"
+    >
+      <div
+        class="h-20 flex items-center justify-between px-6 bg-pale-slate-950 border-b border-pale-slate-800"
+      >
+        <div class="flex items-center gap-3">
+          <div
+            class="w-10 h-10 rounded-xl bg-gradient-to-br from-soft-linen-500 to-soft-linen-700 flex items-center justify-center text-white shadow-lg shadow-soft-linen-900/20"
+          >
+            <i class="ph-bold ph-storefront text-xl"></i>
+          </div>
+          <div class="flex flex-col">
+            <span
+              class="font-bold text-lg text-white leading-tight tracking-wide"
+              >Mi Tienda</span
+            >
+            <span
+              class="text-[10px] font-medium text-soft-linen-500 uppercase tracking-widest"
+              >POS System</span
+            >
+          </div>
+        </div>
+        <button
+          onclick="toggleSidebar()"
+          class="lg:hidden text-pale-slate-500 hover:text-white p-2 rounded-md hover:bg-pale-slate-800 transition-colors"
+        >
+          <i class="ph ph-x text-xl"></i>
+        </button>
+      </div>
+
+      <nav class="flex-1 px-4 py-6 space-y-8 overflow-y-auto custom-scrollbar">
+        <div>
+          <h3
+            class="px-4 text-xs font-bold text-pale-slate-600 uppercase tracking-widest mb-3"
+          >
+            Operación
+          </h3>
+          <div class="space-y-1">
+            <a
+              href="index.html"
+              class="flex items-center px-4 py-3 bg-soft-linen-600 text-white rounded-xl shadow-md shadow-soft-linen-900/10"
+            >
+              <i class="ph-bold ph-squares-four text-lg mr-3"></i>
+              <span class="font-semibold text-sm">Dashboard</span>
+            </a>
+
+            <a
+              href="pos.html"
+              class="flex items-center px-4 py-3 text-pale-slate-400 hover:text-white hover:bg-pale-slate-800 rounded-xl transition-colors duration-100"
+            >
+              <i
+                class="ph ph-shopping-cart text-lg mr-3 group-hover:text-soft-linen-400"
+              ></i>
+              <span class="font-medium text-sm">Punto de Venta</span>
+            </a>
+
+            <a
+              href="#"
+              class="flex items-center px-4 py-3 text-pale-slate-400 hover:text-white hover:bg-pale-slate-800 rounded-xl transition-colors duration-100"
+            >
+              <i
+                class="ph ph-cash-register text-lg mr-3 group-hover:text-soft-linen-400"
+              ></i>
+              <span class="font-medium text-sm">Caja & Movimientos</span>
+            </a>
+
+            <a
+              href="#"
+              class="flex items-center px-4 py-3 text-pale-slate-400 hover:text-white hover:bg-pale-slate-800 rounded-xl transition-colors duration-100"
+            >
+              <div class="mr-3 relative">
+                <i
+                  class="ph ph-notebook text-lg text-yellow-600 hover:text-yellow-400 transition-colors"
+                ></i>
+                <span
+                  class="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-yellow-500 rounded-full"
+                ></span>
+              </div>
+              <span class="font-medium text-sm">Crédito</span>
+            </a>
+          </div>
+        </div>
+
+        <div>
+          <h3
+            class="px-4 text-xs font-bold text-pale-slate-600 uppercase tracking-widest mb-3"
+          >
+            Inventario
+          </h3>
+          <div class="space-y-1">
+            <a
+              href="#"
+              class="flex items-center px-4 py-3 text-pale-slate-400 hover:text-white hover:bg-pale-slate-800 rounded-xl transition-colors duration-100"
+            >
+              <i class="ph ph-package text-lg mr-3"></i>
+              <span class="font-medium text-sm">Productos</span>
+            </a>
+            <a
+              href="#"
+              class="flex items-center px-4 py-3 text-pale-slate-400 hover:text-white hover:bg-pale-slate-800 rounded-xl transition-colors duration-100"
+            >
+              <i class="ph ph-truck text-lg mr-3"></i>
+              <span class="font-medium text-sm">Proveedores</span>
+            </a>
+          </div>
+        </div>
+
+        <div>
+          <h3
+            class="px-4 text-xs font-bold text-pale-slate-600 uppercase tracking-widest mb-3"
+          >
+            Admin
+          </h3>
+          <div class="space-y-1">
+            <a
+              href="#"
+              class="flex items-center px-4 py-3 text-pale-slate-400 hover:text-white hover:bg-pale-slate-800 rounded-xl transition-colors duration-100"
+            >
+              <i class="ph ph-users text-lg mr-3"></i>
+              <span class="font-medium text-sm">Clientes</span>
+            </a>
+            <a
+              href="#"
+              class="flex items-center px-4 py-3 text-pale-slate-400 hover:text-white hover:bg-pale-slate-800 rounded-xl transition-colors duration-100"
+            >
+              <i class="ph ph-gear text-lg mr-3"></i>
+              <span class="font-medium text-sm">Configuración</span>
+            </a>
+          </div>
+        </div>
+      </nav>
+
+      <div class="p-4 bg-pale-slate-950 border-t border-pale-slate-800">
+        <button
+          class="flex items-center gap-3 w-full p-3 rounded-xl hover:bg-pale-slate-800 transition-colors border border-transparent"
+        >
+          <div class="relative">
+            <div
+              class="w-10 h-10 rounded-full bg-pale-slate-700 flex items-center justify-center text-xs font-bold text-white border-2 border-pale-slate-900"
+            >
+              JD
+            </div>
+            <span
+              class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-pale-slate-900 rounded-full"
+            ></span>
+          </div>
+          <div class="flex-1 min-w-0 text-left">
+            <p class="font-semibold text-sm text-white truncate">Juan Dueño</p>
+            <p class="text-[11px] text-pale-slate-500 truncate">
+              Administrador
+            </p>
+          </div>
+          <i class="ph-bold ph-caret-up text-pale-slate-600"></i>
+        </button>
+      </div>
+    </aside>
+
+    <main
+      class="flex-1 flex flex-col min-w-0 overflow-hidden bg-grey-olive-50 h-[100dvh] relative"
+    >
+      <header
+        class="h-16 bg-white border-b border-grey-olive-200 flex items-center justify-between px-4 shadow-sm z-10 flex-shrink-0"
+      >
+        <div class="flex items-center gap-3">
+          <button
+            onclick="toggleSidebar()"
+            class="lg:hidden text-pale-slate-700 p-2 -ml-2 rounded-md hover:bg-grey-olive-100"
+          >
+            <i class="ph ph-list text-2xl"></i>
+          </button>
+          <h1 class="font-bold text-pale-slate-900 text-lg leading-tight">
+            Venta
+            <span class="hidden sm:inline text-grey-olive-400 font-normal"
+              >/ Caja 1</span
+            >
+          </h1>
+        </div>
+
+        <div class="hidden md:block flex-1 max-w-md mx-8">
+          <div class="relative group">
+            <i
+              class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-pale-slate-400 group-focus-within:text-soft-linen-500"
+            ></i>
+            <input
+              type="text"
+              id="buscador-desktop"
+              onkeyup="filtrarProductosLocal(this.value)"
+              placeholder="Filtrar productos en pantalla..."
+              class="w-full pl-10 pr-4 py-2 bg-grey-olive-100 border-transparent focus:bg-white border focus:border-soft-linen-500 rounded-lg text-sm focus:outline-none transition-all"
+            />
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button
+            onclick="limpiarCarrito()"
+            class="text-pale-slate-500 hover:text-red-500 p-2 rounded-full hover:bg-red-50 transition-colors"
+            title="Limpiar Venta"
+          >
+            <i class="ph ph-trash text-xl"></i>
+          </button>
+        </div>
+      </header>
+
+      <div class="flex-1 flex overflow-hidden relative">
+        <div class="flex-1 overflow-y-auto custom-scrollbar bg-grey-olive-50">
+          <div class="p-4 pb-32 lg:pb-8 max-w-7xl mx-auto">
+            <div class="md:hidden mb-4 relative">
+              <i
+                class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-pale-slate-400"
+              ></i>
+              <input
+                type="text"
+                onkeyup="filtrarProductosLocal(this.value)"
+                placeholder="Filtrar producto..."
+                class="w-full pl-10 pr-4 py-3 bg-white border border-grey-olive-200 rounded-xl shadow-sm focus:outline-none focus:border-soft-linen-500 text-base"
+              />
+            </div>
+
+            <div
+              class="flex gap-2 overflow-x-auto pb-4 mb-2 scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0"
+            >
+              <button
+                hx-get="/pos/fragment/productos?categoria=all"
+                hx-target="#grid-productos"
+                hx-swap="innerHTML"
+                hx-indicator="#htmx-loader"
+                class="bg-pale-slate-800 text-white px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap shadow-lg hover:bg-pale-slate-700 transition-colors"
+              >
+                Todo
+              </button>
+              <button
+                hx-get="/pos/fragment/productos?categoria=1"
+                hx-target="#grid-productos"
+                hx-swap="innerHTML"
+                hx-indicator="#htmx-loader"
+                class="bg-white text-pale-slate-600 border border-grey-olive-200 px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap hover:border-soft-linen-500 hover:text-soft-linen-600 transition-colors"
+              >
+                Bebidas
+              </button>
+              <button
+                hx-get="/pos/fragment/productos?categoria=2"
+                hx-target="#grid-productos"
+                hx-swap="innerHTML"
+                hx-indicator="#htmx-loader"
+                class="bg-white text-pale-slate-600 border border-grey-olive-200 px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap hover:border-soft-linen-500 hover:text-soft-linen-600 transition-colors"
+              >
+                Snacks
+              </button>
+            </div>
+
+            <div class="relative min-h-[200px]">
+              <div
+                id="htmx-loader"
+                class="htmx-indicator absolute inset-0 z-10 items-center justify-center bg-grey-olive-50/80 backdrop-blur-sm pointer-events-none"
+              >
+                <i
+                  class="ph ph-spinner animate-spin text-3xl text-soft-linen-600"
+                ></i>
+              </div>
+
+              <div
+                id="grid-productos"
+                class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 sm:gap-4"
+              >
+                <button
+                  class="producto-card bg-white p-2 sm:p-3 rounded-xl border border-grey-olive-200 shadow-sm hover:shadow-lg hover:border-soft-linen-400 hover:-translate-y-1 transition-all group text-left flex flex-col h-full relative overflow-hidden"
+                  onclick="agregarDesdeDOM(this)"
+                  data-id="101"
+                  data-nombre="Coca Cola 1.5L Original"
+                  data-precio="1.50"
+                  data-img="ph-drop"
+                  data-stock="5"
+                >
+                  <div
+                    class="absolute top-2 right-2 bg-grey-olive-100 text-grey-olive-600 text-[10px] font-bold px-2 py-0.5 rounded-full z-10"
+                  >
+                    Stock: 5
+                  </div>
+                  <div
+                    class="aspect-square bg-grey-olive-50 rounded-lg mb-2 sm:mb-3 flex items-center justify-center text-grey-olive-300 group-hover:bg-soft-linen-50 transition-colors"
+                  >
+                    <i class="ph ph-drop text-3xl sm:text-4xl"></i>
+                  </div>
+                  <div class="flex-1 min-h-[3rem]">
+                    <h4
+                      class="font-semibold text-pale-slate-800 text-xs sm:text-sm leading-tight mb-1 line-clamp-2"
+                    >
+                      Coca Cola 1.5L Original
+                    </h4>
+                    <p class="text-[10px] sm:text-xs text-grey-olive-500">
+                      Bebidas
+                    </p>
+                  </div>
+                  <div
+                    class="mt-2 flex justify-between items-end border-t border-grey-olive-50 pt-2"
+                  >
+                    <span
+                      class="font-bold text-base sm:text-lg text-soft-linen-700"
+                      >$1.50</span
+                    >
+                    <div
+                      class="w-7 h-7 rounded-full bg-soft-linen-100 text-soft-linen-600 flex items-center justify-center group-hover:bg-soft-linen-600 group-hover:text-white transition-colors shadow-sm"
+                    >
+                      <i class="ph-bold ph-plus text-xs"></i>
+                    </div>
+                  </div>
+                </button>
+
+                <button
+                  class="producto-card bg-white p-2 sm:p-3 rounded-xl border border-grey-olive-200 shadow-sm hover:shadow-lg hover:border-soft-linen-400 hover:-translate-y-1 transition-all group text-left flex flex-col h-full relative overflow-hidden"
+                  onclick="agregarDesdeDOM(this)"
+                  data-id="102"
+                  data-nombre="Galletas Oreo"
+                  data-precio="0.75"
+                  data-img="ph-cookie"
+                  data-stock="5"
+                >
+                  <div
+                    class="absolute top-2 right-2 bg-grey-olive-100 text-grey-olive-600 text-[10px] font-bold px-2 py-0.5 rounded-full z-10"
+                  >
+                    Stock: 5
+                  </div>
+                  <div
+                    class="aspect-square bg-grey-olive-50 rounded-lg mb-2 sm:mb-3 flex items-center justify-center text-grey-olive-300 group-hover:bg-soft-linen-50 transition-colors"
+                  >
+                    <i class="ph ph-cookie text-3xl sm:text-4xl"></i>
+                  </div>
+                  <div class="flex-1 min-h-[3rem]">
+                    <h4
+                      class="font-semibold text-pale-slate-800 text-xs sm:text-sm leading-tight mb-1 line-clamp-2"
+                    >
+                      Galletas Oreo
+                    </h4>
+                    <p class="text-[10px] sm:text-xs text-grey-olive-500">
+                      Snacks
+                    </p>
+                  </div>
+                  <div
+                    class="mt-2 flex justify-between items-end border-t border-grey-olive-50 pt-2"
+                  >
+                    <span
+                      class="font-bold text-base sm:text-lg text-soft-linen-700"
+                      >$0.75</span
+                    >
+                    <div
+                      class="w-7 h-7 rounded-full bg-soft-linen-100 text-soft-linen-600 flex items-center justify-center group-hover:bg-soft-linen-600 group-hover:text-white transition-colors shadow-sm"
+                    >
+                      <i class="ph-bold ph-plus text-xs"></i>
+                    </div>
+                  </div>
+                </button>
+
+                <button
+                  class="producto-card bg-white p-2 sm:p-3 rounded-xl border border-grey-olive-200 shadow-sm hover:shadow-lg hover:border-soft-linen-400 hover:-translate-y-1 transition-all group text-left flex flex-col h-full relative overflow-hidden"
+                  onclick="agregarDesdeDOM(this)"
+                  data-id="103"
+                  data-nombre="Galletas Salticas"
+                  data-precio="0.50"
+                  data-img="ph-cookie"
+                  data-stock="5"
+                >
+                  <div
+                    class="absolute top-2 right-2 bg-grey-olive-100 text-grey-olive-600 text-[10px] font-bold px-2 py-0.5 rounded-full z-10"
+                  >
+                    Stock: 5
+                  </div>
+                  <div
+                    class="aspect-square bg-grey-olive-50 rounded-lg mb-2 sm:mb-3 flex items-center justify-center text-grey-olive-300 group-hover:bg-soft-linen-50 transition-colors"
+                  >
+                    <i class="ph ph-cookie text-3xl sm:text-4xl"></i>
+                  </div>
+                  <div class="flex-1 min-h-[3rem]">
+                    <h4
+                      class="font-semibold text-pale-slate-800 text-xs sm:text-sm leading-tight mb-1 line-clamp-2"
+                    >
+                      Galletas Salticas
+                    </h4>
+                    <p class="text-[10px] sm:text-xs text-grey-olive-500">
+                      Snacks
+                    </p>
+                  </div>
+                  <div
+                    class="mt-2 flex justify-between items-end border-t border-grey-olive-50 pt-2"
+                  >
+                    <span
+                      class="font-bold text-base sm:text-lg text-soft-linen-700"
+                      >$0.50</span
+                    >
+                    <div
+                      class="w-7 h-7 rounded-full bg-soft-linen-100 text-soft-linen-600 flex items-center justify-center group-hover:bg-soft-linen-600 group-hover:text-white transition-colors shadow-sm"
+                    >
+                      <i class="ph-bold ph-plus text-xs"></i>
+                    </div>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <aside
+          class="hidden lg:flex w-96 bg-white border-l border-grey-olive-200 flex-col shadow-xl z-20"
+        >
+          <div class="p-4 border-b border-grey-olive-100 bg-grey-olive-50/50">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="font-bold text-pale-slate-900 flex items-center gap-2">
+                <i class="ph-fill ph-receipt text-soft-linen-600"></i> Ticket
+                Actual
+              </h3>
+              <span
+                class="text-xs bg-white border border-grey-olive-200 text-pale-slate-500 px-2 py-0.5 rounded font-mono"
+                >#0045</span
+              >
+            </div>
+            <button
+              class="w-full flex items-center justify-between bg-white border border-grey-olive-200 rounded-lg px-3 py-2 text-sm text-pale-slate-600 hover:border-soft-linen-400 transition-colors shadow-sm"
+            >
+              <span class="flex items-center gap-2"
+                ><i class="ph ph-user"></i> Consumidor Final</span
+              >
+              <i class="ph-bold ph-caret-down text-grey-olive-400"></i>
+            </button>
+          </div>
+
+          <div
+            id="lista-carrito-desktop"
+            class="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar"
+          ></div>
+
+          <div
+            class="p-5 bg-white border-t border-grey-olive-200 shadow-[0_-4px_20px_-5px_rgba(0,0,0,0.1)]"
+          >
+            <div class="space-y-1 mb-4">
+              <div class="flex justify-between text-sm text-grey-olive-500">
+                <span>Subtotal</span><span class="lbl-subtotal">$0.00</span>
+              </div>
+              <div class="flex justify-between text-sm text-grey-olive-500">
+                <span>Impuestos</span><span>$0.00</span>
+              </div>
+              <div
+                class="flex justify-between text-2xl font-bold text-pale-slate-900 pt-3 mt-2 border-t border-dashed border-grey-olive-200"
+              >
+                <span>Total</span
+                ><span class="lbl-total text-soft-linen-700">$0.00</span>
+              </div>
+            </div>
+            <button
+              onclick="procesarVenta()"
+              class="w-full bg-soft-linen-600 hover:bg-soft-linen-500 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-soft-linen-900/20 flex items-center justify-center gap-2 transition-all transform active:scale-[0.98]"
+            >
+              <i class="ph-bold ph-money text-xl"></i><span>Cobrar</span>
+            </button>
+          </div>
+        </aside>
+      </div>
+
+      <div
+        id="cart-overlay"
+        onclick="toggleCart()"
+        class="lg:hidden fixed inset-0 bg-pale-slate-900/60 z-40 hidden transition-opacity opacity-0 backdrop-blur-sm"
+      ></div>
+
+      <div
+        id="cart-panel"
+        class="lg:hidden fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-2xl z-50 transform translate-y-full transition-transform duration-300 max-h-[80vh] flex flex-col"
+      >
+        <div
+          onclick="toggleCart()"
+          class="w-full flex justify-center py-3 cursor-pointer border-b border-grey-olive-100"
+        >
+          <div class="w-12 h-1.5 bg-grey-olive-300 rounded-full"></div>
+        </div>
+        <div class="p-4 overflow-y-auto flex-1">
+          <h3 class="font-bold text-pale-slate-900 mb-4">
+            Carrito (<span class="lbl-cantidad-items">0</span>)
+          </h3>
+          <div id="lista-carrito-mobile" class="space-y-4"></div>
+        </div>
+        <div class="p-4 bg-grey-olive-50 border-t border-grey-olive-200">
+          <button
+            onclick="procesarVenta()"
+            class="w-full bg-soft-linen-600 text-white font-bold py-3 rounded-xl shadow-lg flex items-center justify-center gap-2"
+          >
+            Cobrar <span class="lbl-total">$0.00</span>
+          </button>
+        </div>
+      </div>
+
+      <div
+        class="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-grey-olive-200 p-3 px-4 shadow-[0_-5px_15px_rgba(0,0,0,0.05)] z-40 flex items-center justify-between gap-3 safe-area-pb"
+      >
+        <div onclick="toggleCart()" class="flex flex-col cursor-pointer flex-1">
+          <span
+            class="text-[10px] uppercase font-bold text-grey-olive-500 tracking-wider"
+            >Total</span
+          >
+          <div class="flex items-center gap-2">
+            <span class="lbl-total text-xl font-extrabold text-pale-slate-900"
+              >$0.00</span
+            >
+            <i
+              class="ph-bold ph-caret-up text-soft-linen-500 animate-bounce"
+            ></i>
+          </div>
+        </div>
+        <button
+          onclick="procesarVenta()"
+          class="bg-soft-linen-600 text-white px-6 py-3 rounded-xl font-bold shadow-lg flex items-center gap-2 transition-transform active:scale-95"
+        >
+          <span>Cobrar</span><i class="ph-bold ph-arrow-right"></i>
+        </button>
+      </div>
+    </main>
+
+    <script src="assets/js/cart.js"></script>
+    <script src="assets/js/sidebar.js"></script>
+  </body>
+</html>
