@@ -1,100 +1,109 @@
-<header
-  class="h-16 bg-white border-b border-grey-olive-200 flex items-center justify-between px-4 lg:px-8 shadow-sm relative z-10"
->
-  <button
-    (click)="toggleSidebar()"
-    class="lg:hidden text-pale-slate-700 p-2 -ml-2 rounded-md hover:bg-grey-olive-100 focus:outline-none"
+<div class="flex flex-col h-full overflow-hidden bg-gray-olive-50">
+  <header
+    class="h-16 bg-white border-b border-grey-olive-200 flex items-center justify-between px-4 lg:px-8 shadow-sm relative z-10 flex-shrink-0"
   >
-    <i class="ph ph-list text-2xl"></i>
-  </button>
-
-  <h1 class="text-lg lg:text-xl font-bold text-pale-slate-900 ml-2 lg:ml-0">
-    Resumen del Día
-  </h1>
-
-  <div class="flex items-center gap-3">
     <button
-      class="bg-soft-linen-600 hover:bg-soft-linen-500 text-white px-3 py-2 lg:px-4 lg:py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition-colors shadow-sm whitespace-nowrap"
+      (click)="toggleSidebar()"
+      class="lg:hidden text-pale-slate-700 p-2 -ml-2 rounded-md hover:bg-grey-olive-100 focus:outline-none"
     >
-      <i class="ph ph-plus"></i>
-      <span class="hidden sm:inline">Nueva Venta</span>
+      <i class="ph ph-list text-2xl"></i>
     </button>
-  </div>
-</header>
 
-<div class="flex-1 overflow-y-auto p-4 lg:p-8 scroll-smooth">
-  <div
-    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 mb-8"
-  >
-    <div class="bg-white p-6 rounded-xl border border-grey-olive-200 shadow-sm">
-      <div class="flex items-center justify-between mb-4">
-        <div class="p-3 bg-soft-linen-100 rounded-lg text-soft-linen-700">
-          <i class="ph ph-currency-dollar text-xl"></i>
-        </div>
-        <span
-          class="text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded"
-          >+12%</span
-        >
-      </div>
-      <h3 class="text-2xl font-bold text-pale-slate-900">$1,240.50</h3>
-      <p class="text-sm text-grey-olive-500">Ventas de hoy</p>
+    <h1 class="text-lg lg:text-xl font-bold text-pale-slate-900 ml-2 lg:ml-0">
+      Resumen del Día
+    </h1>
+
+    <div class="flex items-center gap-3">
+      <button
+        [disabled]="!isCashOpen()"
+        class="bg-soft-linen-600 hover:bg-soft-linen-500 text-white px-3 py-2 lg:px-4 lg:py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition-colors shadow-sm whitespace-nowrap"
+      >
+        <i class="ph ph-plus"></i>
+        <span class="hidden sm:inline">Nueva Venta</span>
+      </button>
     </div>
+  </header>
 
-    <div class="bg-white p-6 rounded-xl border border-grey-olive-200 shadow-sm">
-      <div class="flex items-center justify-between mb-4">
-        <div class="p-3 bg-lavender-grey-100 rounded-lg text-lavender-grey-700">
-          <i class="ph ph-receipt text-xl"></i>
+  <div class="flex-1 overflow-y-auto p-4 lg:p-8 scroll-smooth">
+    <div
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 mb-8"
+    >
+      <div
+        class="bg-white p-6 rounded-xl border border-grey-olive-200 shadow-sm"
+      >
+        <div class="flex items-center justify-between mb-4">
+          <div class="p-3 bg-soft-linen-100 rounded-lg text-soft-linen-700">
+            <i class="ph ph-currency-dollar text-xl"></i>
+          </div>
+          <span
+            class="text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded"
+            >+12%</span
+          >
         </div>
+        <h3 class="text-2xl font-bold text-pale-slate-900">$1,240.50</h3>
+        <p class="text-sm text-grey-olive-500">Ventas de hoy</p>
       </div>
-      <h3 class="text-2xl font-bold text-pale-slate-900">45</h3>
-      <p class="text-sm text-grey-olive-500">Tickets generados</p>
+
+      <div
+        class="bg-white p-6 rounded-xl border border-grey-olive-200 shadow-sm"
+      >
+        <div class="flex items-center justify-between mb-4">
+          <div
+            class="p-3 bg-lavender-grey-100 rounded-lg text-lavender-grey-700"
+          >
+            <i class="ph ph-receipt text-xl"></i>
+          </div>
+        </div>
+        <h3 class="text-2xl font-bold text-pale-slate-900">45</h3>
+        <p class="text-sm text-grey-olive-500">Tickets generados</p>
+      </div>
+
+      <div
+        class="bg-white p-6 rounded-xl border border-grey-olive-200 shadow-sm sm:col-span-2 lg:col-span-1"
+      >
+        <div class="flex items-center justify-between mb-4">
+          <div class="p-3 bg-pale-slate-100 rounded-lg text-pale-slate-700">
+            <i class="ph ph-users text-xl"></i>
+          </div>
+        </div>
+        <h3 class="text-2xl font-bold text-pale-slate-900">12</h3>
+        <p class="text-sm text-grey-olive-500">Clientes Nuevos</p>
+      </div>
     </div>
 
     <div
-      class="bg-white p-6 rounded-xl border border-grey-olive-200 shadow-sm sm:col-span-2 lg:col-span-1"
+      class="bg-white rounded-xl border border-grey-olive-200 shadow-sm overflow-hidden"
     >
-      <div class="flex items-center justify-between mb-4">
-        <div class="p-3 bg-pale-slate-100 rounded-lg text-pale-slate-700">
-          <i class="ph ph-users text-xl"></i>
-        </div>
+      <div class="px-6 py-4 border-b border-grey-olive-100">
+        <h3 class="font-bold text-pale-slate-800">Últimas Transacciones</h3>
       </div>
-      <h3 class="text-2xl font-bold text-pale-slate-900">12</h3>
-      <p class="text-sm text-grey-olive-500">Clientes Nuevos</p>
-    </div>
-  </div>
-
-  <div
-    class="bg-white rounded-xl border border-grey-olive-200 shadow-sm overflow-hidden"
-  >
-    <div class="px-6 py-4 border-b border-grey-olive-100">
-      <h3 class="font-semibold text-pale-slate-800">Últimas Transacciones</h3>
-    </div>
-    <div class="overflow-x-auto">
-      <table class="w-full text-sm text-left min-w-[600px]">
-        <thead
-          class="bg-grey-olive-50 text-grey-olive-600 font-medium uppercase text-xs"
-        >
-          <tr>
-            <th class="px-6 py-3">ID</th>
-            <th class="px-6 py-3">Cliente</th>
-            <th class="px-6 py-3">Total</th>
-            <th class="px-6 py-3">Estado</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-grey-olive-100">
-          <tr class="hover:bg-soft-linen-50 transition-colors">
-            <td class="px-6 py-4 font-medium">#TR-001</td>
-            <td class="px-6 py-4">Consumidor Final</td>
-            <td class="px-6 py-4 font-bold text-pale-slate-900">$12.50</td>
-            <td class="px-6 py-4">
-              <span
-                class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs"
-                >Pagado</span
-              >
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm text-left min-w-[600px]">
+          <thead
+            class="bg-grey-olive-50 text-grey-olive-600 font-bold uppercase text-[10px] tracking-widest"
+          >
+            <tr>
+              <th class="px-6 py-4">ID</th>
+              <th class="px-6 py-4">Cliente</th>
+              <th class="px-6 py-4">Total</th>
+              <th class="px-6 py-4">Estado</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-grey-olive-100">
+            <tr class="hover:bg-grey-olive-50/50 transition-colors group">
+              <td class="px-6 py-4 font-medium">#TR-001</td>
+              <td class="px-6 py-4">Consumidor Final</td>
+              <td class="px-6 py-4 font-bold text-pale-slate-900">$12.50</td>
+              <td class="px-6 py-4">
+                <span
+                  class="bg-green-100 text-green-700 px-2 py-1 rounded text-[10px] font-black tracking-tighter"
+                  >PAGADO</span
+                >
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>

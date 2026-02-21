@@ -1,7 +1,7 @@
 <!-- Mobile Overlay -->
 <div
   (click)="toggleSidebar()"
-  class="fixed inset-0 bg-pale-slate-950/60 backdrop-blur-sm z-20 lg:hidden transition-all duration-300"
+  class="fixed inset-0 bg-pale-slate-950/60 backdrop-blur-sm z-[60] lg:hidden transition-all duration-300"
   [class.opacity-0]="!isOpen()"
   [class.pointer-events-none]="!isOpen()"
   [class.hidden]="!isOpen()"
@@ -9,36 +9,59 @@
 
 <aside
   id="sidebar"
-  class="fixed inset-y-0 left-0 z-30 w-72 bg-pale-slate-900 text-pale-slate-400 flex flex-col shadow-2xl lg:static lg:translate-x-0 font-sans border-r border-pale-slate-800 transition-transform duration-300"
+  class="fixed inset-y-0 left-0 z-[70] w-72 bg-pale-slate-900 text-pale-slate-400 flex flex-col shadow-2xl lg:static lg:translate-x-0 font-sans border-r border-pale-slate-800 transition-transform duration-300"
   [class.-translate-x-full]="!isOpen()"
 >
   <!-- Header -->
   <div
-    class="h-20 flex items-center justify-between px-6 bg-pale-slate-950 border-b border-pale-slate-800"
+    class="h-auto py-6 flex flex-col px-6 bg-pale-slate-950 border-b border-pale-slate-800 gap-4"
   >
-    <div class="flex items-center gap-3">
-      <div
-        class="w-10 h-10 rounded-xl bg-gradient-to-br from-soft-linen-500 to-soft-linen-700 flex items-center justify-center text-white shadow-lg shadow-soft-linen-900/20"
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div
+          class="w-10 h-10 rounded-xl bg-gradient-to-br from-soft-linen-500 to-soft-linen-700 flex items-center justify-center text-white shadow-lg shadow-soft-linen-900/20"
+        >
+          <i class="ph-bold ph-storefront text-xl"></i>
+        </div>
+        <div class="flex flex-col">
+          <span class="font-bold text-lg text-white leading-tight tracking-wide"
+            >Mi Tienda</span
+          >
+          <span
+            class="text-[10px] font-medium text-soft-linen-500 uppercase tracking-widest"
+            >POS System</span
+          >
+        </div>
+      </div>
+      <button
+        (click)="toggleSidebar()"
+        class="lg:hidden text-pale-slate-500 hover:text-white p-2 rounded-md hover:bg-pale-slate-800 transition-colors"
+        aria-label="Cerrar menú"
       >
-        <i class="ph-bold ph-storefront text-xl"></i>
-      </div>
-      <div class="flex flex-col">
-        <span class="font-bold text-lg text-white leading-tight tracking-wide"
-          >Mi Tienda</span
-        >
-        <span
-          class="text-[10px] font-medium text-soft-linen-500 uppercase tracking-widest"
-          >POS System</span
-        >
-      </div>
+        <i class="ph-bold ph-x text-xl"></i>
+      </button>
     </div>
-    <button
-      (click)="toggleSidebar()"
-      class="lg:hidden text-pale-slate-500 hover:text-white p-2 rounded-md hover:bg-pale-slate-800 transition-colors"
-      aria-label="Cerrar menú"
-    >
-      <i class="ph-bold ph-x text-xl"></i>
-    </button>
+
+    <!-- Cash Status Label -->
+    <div class="flex items-center">
+      @if (cashControlService.isCashOpen()) {
+      <div
+        class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest bg-green-500/10 text-green-400 border border-green-500/20 w-full justify-center"
+      >
+        <span
+          class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"
+        ></span>
+        Caja Abierta
+      </div>
+      } @else {
+      <div
+        class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest bg-red-500/10 text-red-400 border border-red-500/20 w-full justify-center"
+      >
+        <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+        Caja Cerrada
+      </div>
+      }
+    </div>
   </div>
 
   <!-- Navigation -->

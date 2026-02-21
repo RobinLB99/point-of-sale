@@ -1,0 +1,395 @@
+<header
+  class="h-20 lg:h-16 bg-white border-b border-grey-olive-200 flex flex-col lg:flex-row items-center justify-between px-4 lg:px-8 shadow-sm relative z-10 gap-3 py-2 lg:py-0"
+>
+  <div class="flex items-center gap-3 w-full lg:w-auto">
+    <button
+      (click)="toggleSidebar()"
+      class="lg:hidden text-pale-slate-700 p-2 -ml-2 rounded-md hover:bg-grey-olive-100 focus:outline-none"
+    >
+      <i class="ph ph-list text-2xl"></i>
+    </button>
+    <h1
+      class="text-lg lg:text-xl font-bold text-pale-slate-900 whitespace-nowrap"
+    >
+      Crédito (El Fiao)
+    </h1>
+  </div>
+
+  <!-- Barra de Búsqueda y Botón integrados -->
+  <div class="flex items-center gap-3 w-full lg:max-w-2xl">
+    <div class="flex-1 relative group">
+      <i
+        class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-pale-slate-400 group-focus-within:text-soft-linen-500"
+      ></i>
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        (input)="onSearch($event)"
+        placeholder="Buscar cliente..."
+        class="w-full pl-10 pr-4 py-2 bg-grey-olive-50 border border-grey-olive-200 rounded-lg focus:outline-none focus:border-soft-linen-500 text-sm transition-all"
+      />
+    </div>
+    <button
+      class="bg-pale-slate-900 hover:bg-pale-slate-800 text-white px-4 py-2 rounded-lg font-bold flex items-center justify-center gap-2 transition-all hover:shadow-md active:scale-95 text-sm whitespace-nowrap"
+    >
+      <i class="ph-bold ph-user-plus text-lg"></i>
+      <span class="hidden sm:inline">Nuevo Cliente</span>
+    </button>
+  </div>
+</header>
+
+<div class="flex-1 overflow-y-auto p-4 lg:p-8 scroll-smooth bg-grey-olive-50">
+  <!-- Cash Closed Warning -->
+  @if (!cashControlService.isCashOpen()) {
+  <div
+    class="mb-6 bg-yellow-50 border border-yellow-200 rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm animate-in fade-in slide-in-from-top-4 duration-300"
+  >
+    <div class="flex items-center gap-4 text-yellow-800">
+      <div class="p-3 bg-yellow-100 rounded-xl">
+        <i class="ph-bold ph-warning-circle text-2xl"></i>
+      </div>
+      <div>
+        <h3 class="font-bold text-lg">La caja está cerrada</h3>
+        <p class="text-sm opacity-90">
+          Debes abrir la caja para poder registrar abonos de crédito.
+        </p>
+      </div>
+    </div>
+    <a
+      [routerLink]="['/open-cash']"
+      [queryParams]="{ returnUrl: router.url }"
+      class="w-full sm:w-auto px-6 py-3 bg-yellow-600 hover:bg-yellow-700 text-white font-bold rounded-xl transition-all shadow-md shadow-yellow-200 flex items-center justify-center gap-2 active:scale-95"
+    >
+      <i class="ph-bold ph-door-open"></i>
+      ABRIR CAJA AHORA
+    </a>
+  </div>
+  }
+
+  <!-- Tarjetas de Resumen (KPIs) -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+    <div class="bg-white p-6 rounded-xl border border-grey-olive-200 shadow-sm">
+      <p
+        class="text-xs font-bold text-grey-olive-500 uppercase tracking-widest mb-1"
+      >
+        Total Fiado
+      </p>
+      <h3 class="text-2xl font-bold text-red-600">
+        {{ creditService.totalFiado() | currency }}
+      </h3>
+      <p class="text-xs text-grey-olive-400 mt-2">Dinero en la calle</p>
+    </div>
+
+    <div class="bg-white p-6 rounded-xl border border-grey-olive-200 shadow-sm">
+      <p
+        class="text-xs font-bold text-grey-olive-500 uppercase tracking-widest mb-1"
+      >
+        Clientes con Deuda
+      </p>
+      <h3 class="text-2xl font-bold text-pale-slate-900">
+        {{ creditService.debtorCount() }}
+      </h3>
+      <p class="text-xs text-grey-olive-400 mt-2">Vecinos registrados</p>
+    </div>
+
+    <div class="bg-white p-6 rounded-xl border border-grey-olive-200 shadow-sm">
+      <p
+        class="text-xs font-bold text-grey-olive-500 uppercase tracking-widest mb-1"
+      >
+        Al límite de crédito
+      </p>
+      <h3 class="text-2xl font-bold text-yellow-600">
+        {{ creditService.atLimitCount() }}
+      </h3>
+      <p
+        class="text-xs text-red-500 mt-2 font-bold animate-pulse"
+        *ngIf="creditService.atLimitCount() > 0"
+      >
+        Requieren atención
+      </p>
+    </div>
+  </div>
+
+  <!-- Main Content Layout -->
+  <div class="flex flex-col lg:flex-row gap-8">
+    <!-- Tabla de Deudores (70%) -->
+    <div
+      class="flex-1 bg-white rounded-xl border border-grey-olive-200 shadow-sm overflow-hidden flex flex-col"
+    >
+      <div class="px-6 py-4 border-b border-grey-olive-100 bg-white">
+        <h3 class="font-bold text-pale-slate-800">Listado de Deudores</h3>
+      </div>
+      <div class="overflow-x-auto flex-1">
+        <table class="w-full text-sm text-left min-w-[600px]">
+          <thead
+            class="bg-grey-olive-50 text-grey-olive-600 font-bold uppercase text-[10px] tracking-widest"
+          >
+            <tr>
+              <th class="px-6 py-4">Cliente</th>
+              <th class="px-6 py-4">Teléfono</th>
+              <th class="px-6 py-4 text-right">Límite</th>
+              <th class="px-6 py-4 text-right">Deuda Actual</th>
+              <th class="px-6 py-4">Estado</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-grey-olive-100">
+            <tr
+              *ngFor="let debtor of paginatedDebtors()"
+              (click)="selectDebtor(debtor)"
+              class="hover:bg-grey-olive-50/50 transition-colors cursor-pointer group"
+              [class.bg-grey-olive-100]="selectedDebtor()?.id === debtor.id"
+            >
+              <td class="px-6 py-4 font-bold text-pale-slate-700">
+                {{ debtor.name }}
+              </td>
+              <td class="px-6 py-4 text-grey-olive-500 font-medium">
+                {{ debtor.phone }}
+              </td>
+              <td class="px-6 py-4 text-right text-grey-olive-500 font-medium">
+                {{ debtor.creditLimit | currency }}
+              </td>
+              <td class="px-6 py-4 text-right font-black text-red-600">
+                {{ debtor.currentDebt | currency }}
+              </td>
+              <td class="px-6 py-4">
+                <span
+                  class="px-2 py-1 rounded text-[10px] font-black tracking-tighter"
+                  [ngClass]="{
+                        'bg-green-100 text-green-700': debtor.status === 'active',
+                        'bg-yellow-100 text-yellow-700': debtor.status === 'at-limit',
+                        'bg-red-100 text-red-700': debtor.status === 'blocked'
+                      }"
+                >
+                  {{ debtor.status === 'active' ? 'AL DÍA' : (debtor.status ===
+                  'at-limit' ? 'PRECAUCIÓN' : 'BLOQUEADO') }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Paginación -->
+      <div
+        class="px-6 py-4 bg-grey-olive-50/50 border-t border-grey-olive-100 flex items-center justify-between"
+      >
+        <p class="text-xs text-grey-olive-500 font-medium">
+          Mostrando
+          <span class="font-bold text-pale-slate-700"
+            >{{ (currentPage() - 1) * itemsPerPage() + 1 }}</span
+          >
+          a
+          <span class="font-bold text-pale-slate-700"
+            >{{ Math.min(currentPage() * itemsPerPage(),
+            filteredDebtors().length) }}</span
+          >
+          de
+          <span class="font-bold text-pale-slate-700"
+            >{{ filteredDebtors().length }}</span
+          >
+          clientes
+        </p>
+
+        <div class="flex items-center gap-2">
+          <button
+            (click)="prevPage()"
+            [disabled]="currentPage() === 1"
+            class="p-2 rounded-lg border border-grey-olive-200 bg-white text-pale-slate-600 hover:bg-grey-olive-50 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+          >
+            <i class="ph-bold ph-caret-left"></i>
+          </button>
+
+          <div class="flex items-center gap-1">
+            <button
+              *ngFor="let page of [].constructor(totalPages()); let i = index"
+              (click)="setPage(i + 1)"
+              [class.bg-pale-slate-900]="currentPage() === i + 1"
+              [class.text-white]="currentPage() === i + 1"
+              [class.border-pale-slate-900]="currentPage() === i + 1"
+              [class.bg-white]="currentPage() !== i + 1"
+              [class.text-pale-slate-600]="currentPage() !== i + 1"
+              [class.border-grey-olive-200]="currentPage() !== i + 1"
+              class="w-8 h-8 rounded-lg border text-xs font-bold transition-all hover:border-pale-slate-400"
+            >
+              {{ i + 1 }}
+            </button>
+          </div>
+
+          <button
+            (click)="nextPage()"
+            [disabled]="currentPage() === totalPages()"
+            class="p-2 rounded-lg border border-grey-olive-200 bg-white text-pale-slate-600 hover:bg-grey-olive-50 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+          >
+            <i class="ph-bold ph-caret-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel del Cliente (30%) -->
+    <div class="w-full lg:w-96 flex flex-col gap-4">
+      <div
+        *ngIf="selectedDebtor(); else noSelection"
+        class="bg-white rounded-xl border border-grey-olive-200 shadow-sm p-6 animate-in slide-in-from-right-4 duration-300"
+      >
+        <div class="flex items-center gap-4 mb-6">
+          <div
+            class="w-12 h-12 rounded-full bg-soft-linen-100 flex items-center justify-center text-xl font-bold text-soft-linen-600"
+          >
+            {{ selectedDebtor()?.name?.substring(0, 1)?.toUpperCase() }}
+          </div>
+          <div>
+            <h3 class="font-bold text-pale-slate-900 text-lg leading-tight">
+              {{ selectedDebtor()?.name }}
+            </h3>
+            <p class="text-sm text-grey-olive-500">
+              {{ selectedDebtor()?.phone }}
+            </p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 mb-8">
+          <div class="bg-grey-olive-50 p-3 rounded-lg">
+            <p class="text-[10px] font-bold text-grey-olive-500 uppercase">
+              Deuda
+            </p>
+            <p class="text-xl font-black text-red-600">
+              {{ selectedDebtor()?.currentDebt | currency }}
+            </p>
+          </div>
+          <div class="bg-grey-olive-50 p-3 rounded-lg">
+            <p class="text-[10px] font-bold text-grey-olive-500 uppercase">
+              Límite
+            </p>
+            <p class="text-xl font-black text-pale-slate-700">
+              {{ selectedDebtor()?.creditLimit | currency }}
+            </p>
+          </div>
+        </div>
+
+        <button
+          (click)="openAbonoModal()"
+          [disabled]="!cashControlService.isCashOpen()"
+          class="w-full bg-[#6b7c54] hover:bg-[#5a6946] text-white py-4 rounded-xl font-bold flex items-center justify-center gap-3 transition-all hover:shadow-lg active:scale-95 mb-8 disabled:opacity-50 disabled:cursor-not-allowed disabled:grayscale"
+        >
+          <i class="ph-bold ph-plus-circle text-xl"></i>
+          Registrar Abono
+        </button>
+
+        <h4
+          class="font-bold text-pale-slate-800 text-sm mb-4 uppercase tracking-widest flex items-center gap-2"
+        >
+          <i class="ph-bold ph-clock-counter-clockwise"></i>
+          Historial Reciente
+        </h4>
+
+        <div class="space-y-3">
+          <div
+            *ngFor="let movement of selectedDebtorMovements()"
+            class="flex items-start justify-between p-3 border border-grey-olive-100 rounded-lg bg-grey-olive-50/30"
+          >
+            <div>
+              <p class="text-xs font-bold text-pale-slate-700">
+                {{ movement.description }}
+              </p>
+              <p class="text-[10px] text-grey-olive-400">{{ movement.date }}</p>
+            </div>
+            <p
+              class="font-bold text-sm"
+              [ngClass]="movement.type === 'ABONO' ? 'text-green-600' : 'text-red-600'"
+            >
+              {{ movement.type === 'ABONO' ? '+' : '-' }}{{ movement.amount |
+              currency }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #noSelection>
+        <div
+          class="bg-white rounded-xl border-2 border-dashed border-grey-olive-200 p-12 flex flex-col items-center justify-center text-center"
+        >
+          <div
+            class="w-16 h-16 bg-grey-olive-100 rounded-full flex items-center justify-center text-grey-olive-400 mb-4"
+          >
+            <i class="ph ph-user text-4xl"></i>
+          </div>
+          <p class="text-grey-olive-500 font-medium">
+            Selecciona un cliente para ver su detalle y registrar abonos.
+          </p>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Abono -->
+<div
+  *ngIf="showAbonoModal()"
+  class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-pale-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200"
+>
+  <div
+    class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200"
+  >
+    <div
+      class="p-6 border-b border-grey-olive-100 flex items-center justify-between"
+    >
+      <h3 class="text-xl font-bold text-pale-slate-900">Registrar Abono</h3>
+      <button
+        (click)="closeAbonoModal()"
+        class="text-grey-olive-400 hover:text-pale-slate-600"
+      >
+        <i class="ph ph-x text-2xl"></i>
+      </button>
+    </div>
+
+    <div class="p-8">
+      <div class="text-center mb-8">
+        <p class="text-sm text-grey-olive-500 mb-1">Abonando a la cuenta de</p>
+        <h4 class="text-2xl font-black text-pale-slate-900">
+          {{ selectedDebtor()?.name }}
+        </h4>
+        <p class="text-xs font-bold text-red-500 mt-2">
+          Deuda actual: {{ selectedDebtor()?.currentDebt | currency }}
+        </p>
+      </div>
+
+      <div class="mb-8">
+        <label
+          class="block text-xs font-bold text-grey-olive-600 uppercase tracking-widest mb-2 text-center"
+        >
+          Monto del Abono
+        </label>
+        <div class="relative">
+          <span
+            class="absolute left-6 top-1/2 -translate-y-1/2 text-3xl font-black text-grey-olive-400"
+            >$</span
+          >
+          <input
+            type="number"
+            [(ngModel)]="abonoAmount"
+            placeholder="0.00"
+            class="w-full pl-12 pr-6 py-6 bg-grey-olive-50 border-2 border-transparent focus:border-soft-linen-500 rounded-2xl text-4xl font-black text-pale-slate-900 text-center focus:outline-none transition-all"
+            autofocus
+          />
+        </div>
+      </div>
+
+      <div class="flex gap-4">
+        <button
+          (click)="closeAbonoModal()"
+          class="flex-1 px-6 py-4 border border-grey-olive-200 text-pale-slate-600 font-bold rounded-xl hover:bg-grey-olive-50 transition-all"
+        >
+          Cancelar
+        </button>
+        <button
+          (click)="registerAbono()"
+          [disabled]="!abonoAmount() || abonoAmount()! <= 0"
+          class="flex-2 bg-green-600 hover:bg-green-700 text-white px-8 py-4 font-bold rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Guardar Abono
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

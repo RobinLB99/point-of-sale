@@ -1,6 +1,7 @@
 import { Component, inject } from "@angular/core";
 import { RouterLink, RouterLinkActive } from "@angular/router";
 import { UIService } from "../../services/ui.service";
+import { CashControlService } from "../../services/cash-control.service";
 
 @Component({
   selector: "app-sidebar",
@@ -10,6 +11,7 @@ import { UIService } from "../../services/ui.service";
 })
 export class SidebarComponent {
   uiService = inject(UIService);
+  public cashControlService = inject(CashControlService);
   isOpen = this.uiService.sidebarOpen;
 
   toggleSidebar() {

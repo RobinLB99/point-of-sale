@@ -1,7 +1,9 @@
 import { Component, inject, signal, computed } from "@angular/core";
 import { CommonModule, CurrencyPipe } from "@angular/common";
+import { RouterModule, Router } from "@angular/router"; // Importar RouterModule y Router
 import { UIService } from "../../services/ui.service";
 import { CartService, CartItem } from "../../services/cart.service";
+import { CashControlService } from "../../services/cash-control.service";
 import { DesktopCartComponent } from "./components/desktop-cart/desktop-cart";
 import { MobileCartComponent } from "./components/mobile-cart/mobile-cart";
 
@@ -20,6 +22,7 @@ interface Product {
   imports: [
     CommonModule,
     CurrencyPipe,
+    RouterModule, // Añadir RouterModule aquí
     DesktopCartComponent,
     MobileCartComponent,
   ],
@@ -27,8 +30,13 @@ interface Product {
   styleUrl: "./pos.css",
 })
 export class PosComponent {
+  router = inject(Router); // Inyectar Router
   uiService = inject(UIService);
   cartService = inject(CartService);
+  cashControlService = inject(CashControlService); // Inyectar CashControlService
+
+  // Exponer el estado de la caja a la plantilla
+  isCashOpen = this.cashControlService.isCashOpen;
 
   // Estado local para búsqueda y filtrado
   searchQuery = signal("");
@@ -146,6 +154,10 @@ export class PosComponent {
   }
 
   procesarVenta() {
+    if (!this.isCashOpen()) {
+      alert("La caja debe estar abierta para procesar ventas.");
+      return;
+    }
     if (this.cartService.itemsCount() === 0) {
       alert("El carrito está vacío");
       return;

@@ -1,0 +1,50 @@
+<!-- Header Estándar -->
+<header
+  class="h-16 bg-white border-b border-grey-olive-200 flex items-center justify-between px-4 lg:px-8 shadow-sm relative z-10 flex-shrink-0"
+>
+  <div class="flex items-center gap-3">
+    <button
+      (click)="toggleSidebar()"
+      class="lg:hidden text-pale-slate-700 p-2 -ml-2 rounded-md hover:bg-grey-olive-100 focus:outline-none"
+    >
+      <i class="ph ph-list text-2xl"></i>
+    </button>
+    <h1 class="text-lg lg:text-xl font-bold text-cool-slate-900 ml-2 lg:ml-0">
+      Configuración
+    </h1>
+  </div>
+
+  <div class="flex items-center gap-3">
+    <button
+      (click)="saveAll()"
+      class="bg-soft-linen-600 hover:bg-soft-linen-700 text-white font-bold rounded-lg px-6 py-2 transition-all shadow-sm active:scale-95 flex items-center gap-2"
+    >
+      <i class="ph-bold ph-floppy-disk"></i>
+      <span>Guardar Cambios</span>
+    </button>
+  </div>
+</header>
+
+<!-- Contenido Scrollable -->
+<div class="flex-1 overflow-y-auto p-4 lg:p-12 scroll-smooth">
+  <div class="max-w-5xl mx-auto flex flex-col gap-12 pb-20">
+    <!-- Datos del Negocio -->
+    <app-config-negocio></app-config-negocio>
+
+    <!-- Personalización del Ticket -->
+    <app-config-ticket></app-config-ticket>
+
+    <!-- Sistema y Dispositivos -->
+    <app-config-sistema></app-config-sistema>
+
+    <div
+      class="p-4 bg-soft-linen-50 border border-soft-linen-200 rounded-xl flex items-center gap-3 text-soft-linen-700 text-sm italic font-medium"
+    >
+      <i class="ph-bold ph-info text-xl"></i>
+      <p>
+        Nota: Algunos cambios en la configuración de la impresora podrían
+        requerir el reinicio del servicio de impresión en Linux Mint.
+      </p>
+    </div>
+  </div>
+</div>

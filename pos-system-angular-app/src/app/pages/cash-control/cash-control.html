@@ -1,0 +1,193 @@
+<header
+  class="h-16 bg-white border-b border-grey-olive-200 flex items-center justify-between px-4 lg:px-8 shadow-sm relative z-10 flex-shrink-0"
+>
+  <button
+    (click)="toggleSidebar()"
+    class="lg:hidden text-pale-slate-700 p-2 -ml-2 rounded-md hover:bg-grey-olive-100 focus:outline-none"
+  >
+    <i class="ph ph-list text-2xl"></i>
+  </button>
+
+  <h1 class="text-lg lg:text-xl font-bold text-pale-slate-900 ml-2 lg:ml-0">
+    Caja & Movimientos
+  </h1>
+
+  <div class="flex items-center gap-3"></div>
+</header>
+
+<div class="flex-1 overflow-y-auto p-4 lg:p-8 scroll-smooth bg-grey-olive-50">
+  <!-- Panel Superior (Resumen) -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+    <div class="bg-white p-6 rounded-xl border border-grey-olive-200 shadow-sm">
+      <p
+        class="text-xs font-bold text-grey-olive-500 uppercase tracking-widest mb-1"
+      >
+        Saldo Inicial
+      </p>
+      <h3 class="text-2xl font-bold text-pale-slate-900">
+        {{ cashControlService.cashStatus().initialBalance | currency }}
+      </h3>
+      <p class="text-xs text-grey-olive-400 mt-2">
+        Abierta a las {{ cashControlService.cashStatus().openedAt }}
+      </p>
+    </div>
+
+    <div class="bg-white p-6 rounded-xl border border-grey-olive-200 shadow-sm">
+      <p
+        class="text-xs font-bold text-grey-olive-500 uppercase tracking-widest mb-1"
+      >
+        Ventas Efectivo
+      </p>
+      <h3 class="text-2xl font-bold text-green-600">
+        +{{ cashControlService.cashStatus().cashSales | currency }}
+      </h3>
+      <p class="text-xs text-grey-olive-400 mt-2">Suma automática</p>
+    </div>
+
+    <div class="bg-white p-6 rounded-xl border border-grey-olive-200 shadow-sm">
+      <p
+        class="text-xs font-bold text-grey-olive-500 uppercase tracking-widest mb-1"
+      >
+        Salidas/Gastos
+      </p>
+      <h3 class="text-2xl font-bold text-red-600">
+        -{{ cashControlService.cashStatus().expenses | currency }}
+      </h3>
+      <p class="text-xs text-grey-olive-400 mt-2">Retiros manuales</p>
+    </div>
+
+    <div
+      class="bg-white p-6 rounded-xl border border-soft-linen-200 shadow-md ring-1 ring-soft-linen-500/10"
+    >
+      <p
+        class="text-xs font-bold text-soft-linen-600 uppercase tracking-widest mb-1"
+      >
+        Total Esperado
+      </p>
+      <h3 class="text-3xl font-black text-pale-slate-900">
+        {{ cashControlService.cashStatus().expectedTotal | currency }}
+      </h3>
+      <p class="text-xs text-soft-linen-500 mt-2 font-medium">
+        Dinero real en cajón
+      </p>
+    </div>
+  </div>
+
+  <!-- Botones de Acción -->
+  <div class="flex flex-wrap gap-4 mb-8">
+    <a
+      routerLink="expense"
+      [class.pointer-events-none]="!cashControlService.isCashOpen()"
+      [class.opacity-50]="!cashControlService.isCashOpen()"
+      class="flex-1 min-w-[160px] bg-white hover:bg-red-50 text-red-600 border border-red-200 px-6 py-3 rounded-xl font-bold flex items-center justify-center gap-3 transition-all hover:shadow-lg active:scale-95"
+    >
+      <i class="ph-bold ph-minus-circle text-xl"></i>
+      Registrar Gasto
+    </a>
+    <a
+      routerLink="income"
+      [class.pointer-events-none]="!cashControlService.isCashOpen()"
+      [class.opacity-50]="!cashControlService.isCashOpen()"
+      class="flex-1 min-w-[160px] bg-white hover:bg-green-50 text-green-600 border border-green-200 px-6 py-3 rounded-xl font-bold flex items-center justify-center gap-3 transition-all hover:shadow-lg active:scale-95"
+    >
+      <i class="ph-bold ph-plus-circle text-xl"></i>
+      Ingresar Dinero
+    </a>
+    @if (cashControlService.isCashOpen()) {
+    <button
+      (click)="closeCashRegister()"
+      class="flex-1 min-w-[160px] bg-pale-slate-900 hover:bg-pale-slate-800 text-white px-6 py-3 rounded-xl font-bold flex items-center justify-center gap-3 transition-all hover:shadow-lg active:scale-95"
+    >
+      <i class="ph-bold ph-lock text-xl"></i>
+      CERRAR CAJA
+    </button>
+    } @else {
+    <a
+      [routerLink]="['/open-cash']"
+      [queryParams]="{ returnUrl: router.url }"
+      class="flex-1 min-w-[160px] bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-3 rounded-xl font-bold flex items-center justify-center gap-3 transition-all hover:shadow-lg active:scale-95"
+    >
+      <i class="ph-bold ph-door-open text-xl"></i>
+      ABRIR CAJA
+    </a>
+    }
+  </div>
+
+  <!-- Tabla Inferior -->
+  <div
+    class="bg-white rounded-xl border border-grey-olive-200 shadow-sm overflow-hidden"
+  >
+    <div
+      class="px-6 py-4 border-b border-grey-olive-100 bg-white flex items-center justify-between"
+    >
+      <h3 class="font-bold text-pale-slate-800">Últimos Movimientos del Día</h3>
+      <button
+        class="text-soft-linen-600 hover:text-soft-linen-700 text-sm font-bold flex items-center gap-1"
+      >
+        <i class="ph-bold ph-download-simple"></i>
+        Exportar
+      </button>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm text-left min-w-[700px]">
+        <thead
+          class="bg-grey-olive-50 text-grey-olive-600 font-bold uppercase text-[10px] tracking-widest"
+        >
+          <tr>
+            <th class="px-6 py-4">Hora</th>
+            <th class="px-6 py-4">Tipo</th>
+            <th class="px-6 py-4">Descripción</th>
+            <th class="px-6 py-4 text-right">Monto</th>
+            <th class="px-6 py-4">Usuario</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-grey-olive-100">
+          <tr
+            *ngFor="let movement of cashControlService.movements()"
+            class="hover:bg-grey-olive-50/50 transition-colors group"
+          >
+            <td class="px-6 py-4 text-grey-olive-500 font-medium">
+              {{ movement.time }}
+            </td>
+            <td class="px-6 py-4">
+              <span
+                class="px-2 py-1 rounded text-[10px] font-black tracking-tighter"
+                [ngClass]="{
+                  'bg-red-100 text-red-700': movement.type === 'SALIDA',
+                  'bg-green-100 text-green-700': movement.type === 'ENTRADA',
+                  'bg-pale-slate-100 text-pale-slate-700': movement.type === 'INICIO'
+                }"
+              >
+                {{ movement.type }}
+              </span>
+            </td>
+            <td class="px-6 py-4 font-semibold text-pale-slate-700">
+              {{ movement.description }}
+            </td>
+            <td
+              class="px-6 py-4 text-right font-black"
+              [ngClass]="movement.amount >= 0 ? 'text-green-600' : 'text-red-600'"
+            >
+              {{ movement.amount > 0 ? '+' : '' }}{{ movement.amount | currency
+              }}
+            </td>
+            <td class="px-6 py-4">
+              <div class="flex items-center gap-2">
+                <div
+                  class="w-6 h-6 rounded-full bg-pale-slate-200 flex items-center justify-center text-[10px] font-bold text-pale-slate-600"
+                >
+                  {{ movement.user.substring(0, 2).toUpperCase() }}
+                </div>
+                <span class="font-medium text-pale-slate-600"
+                  >{{ movement.user }}</span
+                >
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <router-outlet></router-outlet>
+</div>

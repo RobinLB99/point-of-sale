@@ -1,0 +1,372 @@
+<div
+  class="flex flex-col h-full overflow-hidden relative bg-grey-olive-50 font-sans"
+>
+  <!-- Header Estándar -->
+  <header
+    class="h-16 bg-white border-b border-grey-olive-200 flex items-center justify-between px-4 lg:px-8 shadow-sm relative z-10 flex-shrink-0"
+  >
+    <div class="flex items-center gap-3">
+      <button
+        (click)="toggleSidebar()"
+        class="lg:hidden text-pale-slate-700 p-2 -ml-2 rounded-md hover:bg-grey-olive-100 focus:outline-none"
+      >
+        <i class="ph ph-list text-2xl"></i>
+      </button>
+      <h1 class="text-lg lg:text-xl font-bold text-pale-slate-900 ml-2 lg:ml-0">
+        Proveedores
+      </h1>
+    </div>
+
+    <div class="flex items-center gap-2 lg:gap-3">
+      <button
+        (click)="openNewSupplierModal()"
+        class="bg-soft-linen-600 hover:bg-soft-linen-500 text-white px-3 py-2 lg:px-4 lg:py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-all shadow-sm active:scale-95 whitespace-nowrap"
+      >
+        <i class="ph ph-plus"></i>
+        <span>Nuevo Proveedor</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Contenido Scrollable -->
+  <div class="flex-1 overflow-y-auto p-4 lg:p-8 scroll-smooth">
+    <!-- 1. SECCIÓN SUPERIOR: TARJETAS DE RESUMEN (KPIs) -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div
+        class="bg-white p-6 rounded-xl border border-grey-olive-200 shadow-sm flex items-center gap-4 group hover:shadow-md transition-shadow"
+      >
+        <div
+          class="w-14 h-14 bg-pale-slate-100 rounded-2xl flex items-center justify-center text-pale-slate-600 group-hover:bg-pale-slate-900 group-hover:text-white transition-all"
+        >
+          <i class="ph-bold ph-truck text-2xl"></i>
+        </div>
+        <div>
+          <p
+            class="text-xs font-bold text-grey-olive-400 uppercase tracking-widest mb-0.5"
+          >
+            Total Proveedores
+          </p>
+          <h3 class="text-3xl font-black text-pale-slate-900">
+            {{ totalSuppliers() }}
+          </h3>
+        </div>
+      </div>
+
+      <div
+        class="bg-white p-6 rounded-xl border-2 border-soft-linen-100 shadow-md flex items-center gap-4 relative overflow-hidden group"
+      >
+        <div
+          class="absolute top-0 right-0 w-24 h-24 bg-soft-linen-500/5 rounded-full -mr-8 -mt-8"
+        ></div>
+        <div
+          class="w-14 h-14 bg-soft-linen-100 rounded-2xl flex items-center justify-center text-soft-linen-600"
+        >
+          <i class="ph-bold ph-calendar-check text-2xl"></i>
+        </div>
+        <div>
+          <p
+            class="text-xs font-bold text-soft-linen-600 uppercase tracking-widest mb-0.5"
+          >
+            Visitas para Hoy
+          </p>
+          <h3 class="text-3xl font-black text-soft-linen-700">
+            {{ visitsTodayCount() }}
+          </h3>
+          <p class="text-[10px] font-bold text-soft-linen-500 mt-1 italic">
+            Día de atención prioritaria
+          </p>
+        </div>
+      </div>
+
+      <div
+        class="bg-white p-6 rounded-xl border border-grey-olive-200 shadow-sm flex items-center gap-4 group"
+      >
+        <div
+          class="w-14 h-14 bg-green-50 rounded-2xl flex items-center justify-center text-green-600 group-hover:bg-green-600 group-hover:text-white transition-all"
+        >
+          <i class="ph-bold ph-check-circle text-2xl"></i>
+        </div>
+        <div>
+          <p
+            class="text-xs font-bold text-grey-olive-400 uppercase tracking-widest mb-0.5"
+          >
+            Proveedores Activos
+          </p>
+          <h3 class="text-3xl font-black text-pale-slate-900">
+            {{ activeSuppliers() }}
+          </h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. SECCIÓN MEDIA: BARRA DE ACCIONES -->
+    <div
+      class="bg-white rounded-xl p-4 border border-grey-olive-200 shadow-sm mb-8 flex flex-col md:flex-row gap-4 items-center"
+    >
+      <div class="flex-1 relative w-full">
+        <i
+          class="ph ph-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-grey-olive-400"
+        ></i>
+        <input
+          type="text"
+          [ngModel]="searchTerm()"
+          (ngModelChange)="searchTerm.set($event)"
+          placeholder="Buscar empresa o vendedor..."
+          class="w-full pl-11 pr-4 py-3 bg-grey-olive-50 border border-grey-olive-100 rounded-xl focus:outline-none focus:border-soft-linen-500 focus:bg-white transition-all text-sm"
+        />
+      </div>
+      <div class="w-full md:w-64 relative">
+        <i
+          class="ph ph-funnel absolute left-4 top-1/2 -translate-y-1/2 text-grey-olive-400"
+        ></i>
+        <select
+          [ngModel]="selectedDay()"
+          (ngModelChange)="selectedDay.set($event)"
+          class="w-full pl-11 pr-4 py-3 bg-grey-olive-50 border border-grey-olive-100 rounded-xl focus:outline-none focus:border-soft-linen-500 focus:bg-white transition-all text-sm appearance-none cursor-pointer"
+        >
+          <option value="">Filtrar por Día de Visita</option>
+          <option *ngFor="let day of daysOfWeek" [value]="day">
+            {{ day }}
+          </option>
+        </select>
+        <i
+          class="ph ph-caret-down absolute right-4 top-1/2 -translate-y-1/2 text-grey-olive-400 pointer-events-none"
+        ></i>
+      </div>
+    </div>
+
+    <!-- 3. SECCIÓN INFERIOR: TABLA DE DATOS -->
+    <div
+      class="bg-white rounded-xl shadow-sm border border-grey-olive-200 overflow-hidden"
+    >
+      <div
+        class="px-6 py-4 border-b border-grey-olive-100 flex items-center justify-between"
+      >
+        <h3 class="font-bold text-pale-slate-800">
+          Directorio de Abastecimiento
+        </h3>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left min-w-[800px]">
+          <thead
+            class="bg-grey-olive-50 text-grey-olive-500 text-[10px] font-black uppercase tracking-[0.15em]"
+          >
+            <tr>
+              <th class="px-6 py-4">Empresa / Marca</th>
+              <th class="px-6 py-4">Vendedor</th>
+              <th class="px-6 py-4">Teléfono</th>
+              <th class="px-6 py-4">Día de Visita</th>
+              <th class="px-6 py-4 text-center">Estado</th>
+              <th class="px-6 py-4 text-right">Acciones</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-grey-olive-100">
+            <tr
+              *ngFor="let supplier of filteredSuppliers()"
+              class="hover:bg-grey-olive-50/50 transition-colors group"
+            >
+              <td class="px-6 py-5">
+                <span class="font-bold text-pale-slate-900 block text-base"
+                  >{{ supplier.empresa }}</span
+                >
+              </td>
+              <td class="px-6 py-5">
+                <span class="text-sm text-pale-slate-500 font-medium"
+                  >{{ supplier.vendedor }}</span
+                >
+              </td>
+              <td class="px-6 py-5">
+                <button
+                  (click)="openWhatsApp(supplier.telefono)"
+                  class="flex items-center gap-2 group/wa"
+                >
+                  <span
+                    class="text-sm font-bold text-pale-slate-700 group-hover/wa:text-green-600 transition-colors"
+                    >{{ supplier.telefono }}</span
+                  >
+                  <div
+                    class="w-7 h-7 bg-green-100 rounded-full flex items-center justify-center text-green-600 group-hover/wa:bg-green-600 group-hover/wa:text-white transition-all shadow-sm"
+                  >
+                    <i class="ph-bold ph-whatsapp-logo"></i>
+                  </div>
+                </button>
+              </td>
+              <td class="px-6 py-5">
+                <span
+                  class="px-3 py-1 bg-pale-slate-100 text-pale-slate-600 rounded-lg text-[10px] font-black uppercase tracking-wider border border-pale-slate-200"
+                >
+                  {{ supplier.diaVisita }}
+                </span>
+              </td>
+              <td class="px-6 py-5 text-center">
+                <span
+                  class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter"
+                  [ngClass]="supplier.activo ? 'bg-green-100 text-green-700' : 'bg-grey-olive-100 text-grey-olive-500'"
+                >
+                  {{ supplier.activo ? 'Activo' : 'Inactivo' }}
+                </span>
+              </td>
+              <td class="px-6 py-5 text-right">
+                <div class="flex justify-end gap-1">
+                  <button
+                    (click)="openEditSupplierModal(supplier)"
+                    class="p-2 text-pale-slate-400 hover:text-soft-linen-600 hover:bg-soft-linen-50 rounded-lg transition-all"
+                    title="Editar"
+                  >
+                    <i class="ph-bold ph-pencil-simple text-lg"></i>
+                  </button>
+                  <button
+                    (click)="deleteSupplier(supplier.id)"
+                    class="p-2 text-pale-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
+                    title="Eliminar"
+                  >
+                    <i class="ph-bold ph-trash text-lg"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div *ngIf="filteredSuppliers().length === 0" class="p-16 text-center">
+        <div
+          class="w-16 h-16 bg-grey-olive-100 rounded-full flex items-center justify-center mx-auto mb-4 text-grey-olive-300"
+        >
+          <i class="ph ph-truck text-4xl"></i>
+        </div>
+        <p class="text-grey-olive-500 font-medium italic">
+          No se encontraron proveedores con ese nombre o día de visita.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 4. MODAL INTERACTIVO: NUEVO / EDITAR PROVEEDOR -->
+<div
+  *ngIf="isModalOpen()"
+  class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-pale-slate-950/60 backdrop-blur-sm transition-all duration-300"
+>
+  <div
+    class="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-200"
+  >
+    <!-- Cabecera -->
+    <div
+      class="px-8 py-6 border-b border-grey-olive-100 flex items-center justify-between bg-white"
+    >
+      <div>
+        <h3 class="text-xl font-black text-pale-slate-900 leading-none mb-1">
+          {{ editingSupplier() ? 'Actualizar Proveedor' : 'Registrar Proveedor'
+          }}
+        </h3>
+        <p class="text-xs text-grey-olive-400 font-medium">
+          Gestión del directorio de abastecimiento
+        </p>
+      </div>
+      <button
+        (click)="closeModal()"
+        class="w-10 h-10 flex items-center justify-center text-grey-olive-400 hover:text-pale-slate-900 hover:bg-grey-olive-50 rounded-full transition-all"
+      >
+        <i class="ph-bold ph-x text-2xl"></i>
+      </button>
+    </div>
+
+    <!-- Cuerpo (Formulario) -->
+    <form
+      [formGroup]="supplierForm"
+      (ngSubmit)="saveSupplier()"
+      class="p-8 space-y-6"
+    >
+      <div class="space-y-4">
+        <div>
+          <label
+            class="block text-xs font-black text-pale-slate-500 uppercase tracking-widest mb-2"
+            >Empresa / Marca</label
+          >
+          <input
+            type="text"
+            formControlName="empresa"
+            placeholder="Ej. La Fabril, Coca-Cola..."
+            class="w-full px-4 py-3 bg-grey-olive-50 border border-grey-olive-200 rounded-xl focus:ring-2 focus:ring-soft-linen-500 focus:border-soft-linen-500 outline-none transition-all font-semibold"
+          />
+        </div>
+
+        <div>
+          <label
+            class="block text-xs font-black text-pale-slate-500 uppercase tracking-widest mb-2"
+            >Nombre del Contacto</label
+          >
+          <input
+            type="text"
+            formControlName="vendedor"
+            placeholder="Ej. Don Carlos, Sr. preventista..."
+            class="w-full px-4 py-3 bg-grey-olive-50 border border-grey-olive-200 rounded-xl focus:ring-2 focus:ring-soft-linen-500 focus:border-soft-linen-500 outline-none transition-all font-semibold"
+          />
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label
+              class="block text-xs font-black text-pale-slate-500 uppercase tracking-widest mb-2"
+              >Teléfono / Celular</label
+            >
+            <input
+              type="text"
+              formControlName="telefono"
+              placeholder="09..."
+              class="w-full px-4 py-3 bg-grey-olive-50 border border-grey-olive-200 rounded-xl focus:ring-2 focus:ring-soft-linen-500 focus:border-soft-linen-500 outline-none transition-all font-semibold"
+            />
+          </div>
+          <div>
+            <label
+              class="block text-xs font-black text-pale-slate-500 uppercase tracking-widest mb-2"
+              >Día de Visita</label
+            >
+            <select
+              formControlName="diaVisita"
+              class="w-full px-4 py-3 bg-grey-olive-50 border border-grey-olive-200 rounded-xl focus:ring-2 focus:ring-soft-linen-500 focus:border-soft-linen-500 outline-none transition-all font-semibold cursor-pointer appearance-none"
+            >
+              <option *ngFor="let day of daysOfWeek" [value]="day">
+                {{ day }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3 pt-2">
+          <input
+            type="checkbox"
+            id="activo"
+            formControlName="activo"
+            class="w-5 h-5 rounded text-soft-linen-600 focus:ring-soft-linen-500"
+          />
+          <label
+            for="activo"
+            class="text-sm font-bold text-pale-slate-700 cursor-pointer"
+            >Proveedor Activo</label
+          >
+        </div>
+      </div>
+
+      <!-- Pie del Modal -->
+      <div
+        class="pt-6 flex items-center justify-end gap-4 border-t border-grey-olive-100"
+      >
+        <button
+          type="button"
+          (click)="closeModal()"
+          class="px-6 py-3 text-sm font-bold text-pale-slate-400 hover:text-pale-slate-600 transition-colors"
+        >
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          [disabled]="supplierForm.invalid"
+          class="px-10 py-3 bg-soft-linen-600 text-white rounded-xl text-sm font-black uppercase tracking-widest hover:bg-soft-linen-700 transition-all shadow-lg shadow-soft-linen-500/20 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {{ editingSupplier() ? 'Guardar Cambios' : 'Confirmar Registro' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

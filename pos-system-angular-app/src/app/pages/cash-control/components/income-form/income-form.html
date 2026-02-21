@@ -1,0 +1,77 @@
+<!-- Overlay Background -->
+<div
+  class="fixed inset-0 bg-pale-slate-950/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4"
+>
+  <div
+    (click)="$event.stopPropagation()"
+    class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200"
+  >
+    <div
+      class="p-6 border-b border-grey-olive-100 flex items-center justify-between bg-green-50"
+    >
+      <div class="flex items-center gap-3 text-green-600">
+        <i class="ph-bold ph-plus-circle text-2xl"></i>
+        <h2 class="text-xl font-bold">Ingresar Dinero</h2>
+      </div>
+      <button
+        (click)="close()"
+        class="text-pale-slate-400 hover:text-pale-slate-600 p-1"
+      >
+        <i class="ph-bold ph-x text-xl"></i>
+      </button>
+    </div>
+
+    <form (ngSubmit)="save()" class="p-6 space-y-4">
+      <div>
+        <label class="block text-sm font-bold text-pale-slate-700 mb-1"
+          >Concepto / Motivo</label
+        >
+        <input
+          type="text"
+          name="description"
+          [(ngModel)]="income.description"
+          placeholder="Ej: Cambio de monedas, Ajuste de caja..."
+          class="w-full px-4 py-3 rounded-xl border border-grey-olive-200 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all"
+          required
+        />
+      </div>
+
+      <div>
+        <label class="block text-sm font-bold text-pale-slate-700 mb-1"
+          >Monto ($)</label
+        >
+        <div class="relative">
+          <span
+            class="absolute left-4 top-1/2 -translate-y-1/2 text-pale-slate-400 font-bold"
+            >$</span
+          >
+          <input
+            type="number"
+            name="amount"
+            [(ngModel)]="income.amount"
+            placeholder="0.00"
+            step="0.01"
+            class="w-full pl-8 pr-4 py-3 rounded-xl border border-grey-olive-200 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all font-bold text-lg"
+            required
+          />
+        </div>
+      </div>
+
+      <div class="pt-4 flex gap-3">
+        <button
+          type="button"
+          (click)="close()"
+          class="flex-1 px-6 py-3 rounded-xl font-bold text-pale-slate-600 hover:bg-grey-olive-100 transition-colors"
+        >
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          class="flex-1 px-6 py-3 rounded-xl font-bold text-white bg-green-600 hover:bg-green-700 shadow-lg shadow-green-200 transition-all active:scale-95"
+        >
+          Guardar Ingreso
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
