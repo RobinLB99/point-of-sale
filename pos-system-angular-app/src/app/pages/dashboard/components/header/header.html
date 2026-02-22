@@ -1,0 +1,25 @@
+<header
+  class="h-16 bg-white border-b border-grey-olive-200 flex items-center justify-between px-4 lg:px-8 shadow-sm relative z-10 flex-shrink-0"
+>
+  <button
+    (click)="toggleSidebar()"
+    class="lg:hidden text-pale-slate-700 p-2 -ml-2 rounded-md hover:bg-grey-olive-100 focus:outline-none"
+  >
+    <i class="ph ph-list text-2xl"></i>
+  </button>
+
+  <h1 class="text-lg lg:text-xl font-bold text-pale-slate-900 ml-2 lg:ml-0">
+    Resumen del Día
+  </h1>
+
+  <div class="flex items-center gap-3">
+    <button
+      (click)="goToNewSale()"
+      [disabled]="!isCashOpen"
+      class="bg-soft-linen-600 hover:bg-soft-linen-500 text-white px-3 py-2 lg:px-4 lg:py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition-colors shadow-sm whitespace-nowrap"
+    >
+      <i class="ph ph-plus"></i>
+      <span class="hidden sm:inline">Nueva Venta</span>
+    </button>
+  </div>
+</header>

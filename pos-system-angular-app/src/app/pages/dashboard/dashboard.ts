@@ -1,19 +1,21 @@
 import { Component, inject } from "@angular/core";
 import { UIService } from "../../services/ui.service";
-import { CashControlService } from "../../services/cash-control.service"; // Import CashControlService
+import { CashControlService } from "../../services/cash-control.service";
+import { Header } from "./components/header/header";
+import { CardGroup } from "./components/card-group/card-group";
+import { TransactionTable } from "./components/transaction-table/transaction-table";
 
 @Component({
   selector: "app-dashboard",
   standalone: true,
-  imports: [],
+  imports: [Header, CardGroup, TransactionTable],
   templateUrl: "./dashboard.html",
   styleUrl: "./dashboard.css",
 })
 export class Dashboard {
   private uiService = inject(UIService);
-  cashControlService = inject(CashControlService); // Inyectar CashControlService
+  cashControlService = inject(CashControlService);
 
-  // Exponer el estado de la caja a la plantilla
   isCashOpen = this.cashControlService.isCashOpen;
 
   toggleSidebar() {
