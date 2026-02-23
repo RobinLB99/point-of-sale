@@ -1,0 +1,42 @@
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+  <div class="bg-white p-6 rounded-xl border border-grey-olive-200 shadow-sm">
+    <p
+      class="text-xs font-bold text-grey-olive-500 uppercase tracking-widest mb-1"
+    >
+      Total Fiado
+    </p>
+    <h3 class="text-2xl font-bold text-red-600">
+      {{ creditService.totalFiado() | currency }}
+    </h3>
+    <p class="text-xs text-grey-olive-400 mt-2">Dinero en la calle</p>
+  </div>
+
+  <div class="bg-white p-6 rounded-xl border border-grey-olive-200 shadow-sm">
+    <p
+      class="text-xs font-bold text-grey-olive-500 uppercase tracking-widest mb-1"
+    >
+      Clientes con Deuda
+    </p>
+    <h3 class="text-2xl font-bold text-pale-slate-900">
+      {{ creditService.debtorCount() }}
+    </h3>
+    <p class="text-xs text-grey-olive-400 mt-2">Vecinos registrados</p>
+  </div>
+
+  <div class="bg-white p-6 rounded-xl border border-grey-olive-200 shadow-sm">
+    <p
+      class="text-xs font-bold text-grey-olive-500 uppercase tracking-widest mb-1"
+    >
+      Al límite de crédito
+    </p>
+    <h3 class="text-2xl font-bold text-yellow-600">
+      {{ creditService.atLimitCount() }}
+    </h3>
+    <p
+      class="text-xs text-red-500 mt-2 font-bold animate-pulse"
+      *ngIf="creditService.atLimitCount() > 0"
+    >
+      Requieren atención
+    </p>
+  </div>
+</div>

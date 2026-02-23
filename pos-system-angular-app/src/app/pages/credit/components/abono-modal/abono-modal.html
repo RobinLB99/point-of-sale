@@ -1,0 +1,68 @@
+<div
+  class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-pale-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200"
+>
+  <div
+    class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200"
+  >
+    <div
+      class="p-6 border-b border-grey-olive-100 flex items-center justify-between"
+    >
+      <h3 class="text-xl font-bold text-pale-slate-900">Registrar Abono</h3>
+      <button
+        (click)="onClose.emit()"
+        class="text-grey-olive-400 hover:text-pale-slate-600"
+      >
+        <i class="ph ph-x text-2xl"></i>
+      </button>
+    </div>
+
+    <div class="p-8">
+      <div class="text-center mb-8">
+        <p class="text-sm text-grey-olive-500 mb-1">Abonando a la cuenta de</p>
+        <h4 class="text-2xl font-black text-pale-slate-900">
+          {{ debtor()?.name }}
+        </h4>
+        <p class="text-xs font-bold text-red-500 mt-2">
+          Deuda actual: {{ debtor()?.currentDebt | currency }}
+        </p>
+      </div>
+
+      <div class="mb-8">
+        <label
+          class="block text-xs font-bold text-grey-olive-600 uppercase tracking-widest mb-2 text-center"
+        >
+          Monto del Abono
+        </label>
+        <div class="relative">
+          <span
+            class="absolute left-6 top-1/2 -translate-y-1/2 text-3xl font-black text-grey-olive-400"
+            >$</span
+          >
+          <input
+            type="number"
+            [(ngModel)]="amount"
+            placeholder="0.00"
+            class="w-full pl-12 pr-6 py-6 bg-grey-olive-50 border-2 border-transparent focus:border-soft-linen-500 rounded-2xl text-4xl font-black text-pale-slate-900 text-center focus:outline-none transition-all"
+            autofocus
+          />
+        </div>
+      </div>
+
+      <div class="flex gap-4">
+        <button
+          (click)="onClose.emit()"
+          class="flex-1 px-6 py-4 border border-grey-olive-200 text-pale-slate-600 font-bold rounded-xl hover:bg-grey-olive-50 transition-all"
+        >
+          Cancelar
+        </button>
+        <button
+          (click)="save()"
+          [disabled]="!amount() || amount()! <= 0"
+          class="flex-2 bg-green-600 hover:bg-green-700 text-white px-8 py-4 font-bold rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Guardar Abono
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

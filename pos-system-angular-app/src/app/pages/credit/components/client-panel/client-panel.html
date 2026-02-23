@@ -1,0 +1,98 @@
+<div class="w-full lg:w-96 flex flex-col gap-4">
+  @if (debtor()) {
+  <div
+    class="bg-white rounded-xl border border-grey-olive-200 shadow-sm p-6 animate-in slide-in-from-right-4 duration-300"
+  >
+    <div class="flex items-center gap-4 mb-6">
+      <div
+        class="w-12 h-12 rounded-full bg-soft-linen-100 flex items-center justify-center text-xl font-bold text-soft-linen-600"
+      >
+        {{ debtor()?.name?.substring(0, 1)?.toUpperCase() }}
+      </div>
+      <div>
+        <h3 class="font-bold text-pale-slate-900 text-lg leading-tight">
+          {{ debtor()?.name }}
+        </h3>
+        <p class="text-sm text-grey-olive-500">{{ debtor()?.phone }}</p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4 mb-8">
+      <div class="bg-grey-olive-50 p-3 rounded-lg">
+        <p class="text-[10px] font-bold text-grey-olive-500 uppercase">Deuda</p>
+        <p class="text-xl font-black text-red-600">
+          {{ debtor()?.currentDebt | currency }}
+        </p>
+      </div>
+      <div class="bg-grey-olive-50 p-3 rounded-lg">
+        <p class="text-[10px] font-bold text-grey-olive-500 uppercase">
+          Límite
+        </p>
+        <p class="text-xl font-black text-pale-slate-700">
+          {{ debtor()?.creditLimit | currency }}
+        </p>
+      </div>
+    </div>
+
+    <button
+      (click)="onOpenAbono.emit()"
+      [disabled]="!cashOpen()"
+      class="w-full bg-[#6b7c54] hover:bg-[#5a6946] text-white py-4 rounded-xl font-bold flex items-center justify-center gap-3 transition-all hover:shadow-lg active:scale-95 mb-8 disabled:opacity-50 disabled:cursor-not-allowed disabled:grayscale"
+    >
+      <i class="ph-bold ph-plus-circle text-xl"></i>
+      Registrar Abono
+    </button>
+
+    <h4
+      class="font-bold text-pale-slate-800 text-sm mb-4 uppercase tracking-widest flex items-center gap-2"
+    >
+      <i class="ph-bold ph-clock-counter-clockwise"></i>
+      Historial Reciente
+    </h4>
+
+    <div class="space-y-3">
+      @for (movement of movements(); track $index) {
+      <div
+        class="flex items-start justify-between p-3 border border-grey-olive-100 rounded-lg bg-grey-olive-50/30"
+      >
+        <div>
+          <p class="text-xs font-bold text-pale-slate-700">
+            {{ movement.description }}
+          </p>
+          <p class="text-[10px] text-grey-olive-400">{{ movement.date }}</p>
+        </div>
+        <p
+          class="font-bold text-sm"
+          [ngClass]="movement.type === 'ABONO' ? 'text-green-600' : 'text-red-600'"
+        >
+          {{ movement.type === 'ABONO' ? '+' : '-' }}{{ movement.amount |
+          currency }}
+        </p>
+      </div>
+      }
+
+      @if (movements().length === 0) {
+      <div
+        class="text-center py-4 text-grey-olive-400 text-xs italic"
+      >
+        Sin movimientos recientes.
+      </div>
+      }
+    </div>
+  </div>
+  }
+  @else {
+  <div
+    class="bg-white rounded-xl border-2 border-dashed border-grey-olive-200 p-12 flex flex-col items-center justify-center text-center"
+  >
+    <div
+      class="w-16 h-16 bg-grey-olive-100 rounded-full flex items-center justify-center text-grey-olive-400 mb-4"
+    >
+      <i class="ph ph-user text-4xl"></i>
+    </div>
+    <p class="text-grey-olive-500 font-medium">
+      Selecciona un cliente para ver su detalle y registrar abonos.
+    </p>
+  </div>
+  }
+</div>

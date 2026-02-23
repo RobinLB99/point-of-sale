@@ -1,0 +1,109 @@
+<div
+  class="flex-1 bg-white rounded-xl border border-grey-olive-200 shadow-sm overflow-hidden flex flex-col"
+>
+  <div class="px-6 py-4 border-b border-grey-olive-100 bg-white">
+    <h3 class="font-bold text-pale-slate-800">Listado de Deudores</h3>
+  </div>
+  <div class="overflow-x-auto flex-1">
+    <table class="w-full text-sm text-left min-w-[600px]">
+      <thead
+        class="bg-grey-olive-50 text-grey-olive-600 font-bold uppercase text-[10px] tracking-widest"
+      >
+        <tr>
+          <th class="px-6 py-4">Cliente</th>
+          <th class="px-6 py-4">Teléfono</th>
+          <th class="px-6 py-4 text-right">Límite</th>
+          <th class="px-6 py-4 text-right">Deuda Actual</th>
+          <th class="px-6 py-4">Estado</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-grey-olive-100">
+        <tr
+          *ngFor="let debtor of paginatedDebtors()"
+          (click)="onSelect.emit(debtor)"
+          class="hover:bg-grey-olive-50/50 transition-colors cursor-pointer group"
+          [class.bg-grey-olive-100]="selectedId() === debtor.id"
+        >
+          <td class="px-6 py-4 font-bold text-pale-slate-700">
+            {{ debtor.name }}
+          </td>
+          <td class="px-6 py-4 text-grey-olive-500 font-medium">
+            {{ debtor.phone }}
+          </td>
+          <td class="px-6 py-4 text-right text-grey-olive-500 font-medium">
+            {{ debtor.creditLimit | currency }}
+          </td>
+          <td class="px-6 py-4 text-right font-black text-red-600">
+            {{ debtor.currentDebt | currency }}
+          </td>
+          <td class="px-6 py-4">
+            <span
+              class="px-2 py-1 rounded text-[10px] font-black tracking-tighter"
+              [ngClass]="{
+                'bg-green-100 text-green-700': debtor.status === 'active',
+                'bg-yellow-100 text-yellow-700': debtor.status === 'at-limit',
+                'bg-red-100 text-red-700': debtor.status === 'blocked'
+              }"
+            >
+              {{ debtor.status === 'active' ? 'AL DÍA' : (debtor.status ===
+              'at-limit' ? 'PRECAUCIÓN' : 'BLOQUEADO') }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Paginación -->
+  <div
+    class="px-6 py-4 bg-grey-olive-50/50 border-t border-grey-olive-100 flex items-center justify-between"
+  >
+    <p class="text-xs text-grey-olive-500 font-medium">
+      Mostrando
+      <span class="font-bold text-pale-slate-700"
+        >{{ (currentPage() - 1) * itemsPerPage() + 1 }}</span
+      >
+      a
+      <span class="font-bold text-pale-slate-700"
+        >{{ Math.min(currentPage() * itemsPerPage(), debtors().length) }}</span
+      >
+      de
+      <span class="font-bold text-pale-slate-700">{{ debtors().length }}</span>
+      clientes
+    </p>
+
+    <div class="flex items-center gap-2">
+      <button
+        (click)="changePage(currentPage() - 1)"
+        [disabled]="currentPage() === 1"
+        class="p-2 rounded-lg border border-grey-olive-200 bg-white text-pale-slate-600 hover:bg-grey-olive-50 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+      >
+        <i class="ph-bold ph-caret-left"></i>
+      </button>
+
+      <div class="flex items-center gap-1">
+        <button
+          *ngFor="let page of pages()"
+          (click)="changePage(page)"
+          [class.bg-pale-slate-900]="currentPage() === page"
+          [class.text-white]="currentPage() === page"
+          [class.border-pale-slate-900]="currentPage() === page"
+          [class.bg-white]="currentPage() !== page"
+          [class.text-pale-slate-600]="currentPage() !== page"
+          [class.border-grey-olive-200]="currentPage() !== page"
+          class="w-8 h-8 rounded-lg border text-xs font-bold transition-all hover:border-pale-slate-400"
+        >
+          {{ page }}
+        </button>
+      </div>
+
+      <button
+        (click)="changePage(currentPage() + 1)"
+        [disabled]="currentPage() === totalPages()"
+        class="p-2 rounded-lg border border-grey-olive-200 bg-white text-pale-slate-600 hover:bg-grey-olive-50 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+      >
+        <i class="ph-bold ph-caret-right"></i>
+      </button>
+    </div>
+  </div>
+</div>

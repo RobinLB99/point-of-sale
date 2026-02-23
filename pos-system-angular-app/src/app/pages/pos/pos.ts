@@ -1,11 +1,16 @@
 import { Component, inject, signal, computed } from "@angular/core";
 import { CommonModule, CurrencyPipe } from "@angular/common";
-import { RouterModule, Router } from "@angular/router"; // Importar RouterModule y Router
+import { RouterModule, Router } from "@angular/router";
 import { UIService } from "../../services/ui.service";
-import { CartService, CartItem } from "../../services/cart.service";
+import { CartService } from "../../services/cart.service";
 import { CashControlService } from "../../services/cash-control.service";
+
+// Componentes del POS
 import { DesktopCartComponent } from "./components/desktop-cart/desktop-cart";
 import { MobileCartComponent } from "./components/mobile-cart/mobile-cart";
+import { PosActionBarComponent } from "./components/pos-action-bar/pos-action-bar";
+import { ProductGridComponent } from "./components/product-grid/product-grid";
+import { CashStatusBannerComponent } from "./components/cash-status-banner/cash-status-banner";
 
 interface Product {
   id: string;
@@ -22,20 +27,22 @@ interface Product {
   imports: [
     CommonModule,
     CurrencyPipe,
-    RouterModule, // Añadir RouterModule aquí
+    RouterModule,
     DesktopCartComponent,
     MobileCartComponent,
+    PosActionBarComponent,
+    ProductGridComponent,
+    CashStatusBannerComponent,
   ],
   templateUrl: "./pos.html",
   styleUrl: "./pos.css",
 })
 export class PosComponent {
-  router = inject(Router); // Inyectar Router
+  router = inject(Router);
   uiService = inject(UIService);
   cartService = inject(CartService);
-  cashControlService = inject(CashControlService); // Inyectar CashControlService
+  cashControlService = inject(CashControlService);
 
-  // Exponer el estado de la caja a la plantilla
   isCashOpen = this.cashControlService.isCashOpen;
 
   // Estado local para búsqueda y filtrado
@@ -43,7 +50,7 @@ export class PosComponent {
   selectedCategory = signal("all");
   isCartMobileOpen = signal(false);
 
-  // Datos estáticos (En el futuro vendrán de un servicio/API)
+  // Datos (En el futuro vendrán de un servicio/API)
   products = signal<Product[]>([
     {
       id: "101",
@@ -96,8 +103,8 @@ export class PosComponent {
   ]);
 
   categories = computed(() => {
-    // Hardcoded for now based on products, can be dynamic
-    return ["all", "Bebidas", "Snacks"];
+    const cats = this.products().map((p) => p.categoria);
+    return ["all", ...new Set(cats)];
   });
 
   filteredProducts = computed(() => {
@@ -116,15 +123,6 @@ export class PosComponent {
     this.uiService.toggleSidebar();
   }
 
-  setCategory(cat: string) {
-    this.selectedCategory.set(cat);
-  }
-
-  onSearch(event: Event) {
-    const input = event.target as HTMLInputElement;
-    this.searchQuery.set(input.value);
-  }
-
   toggleCartMobile() {
     this.isCartMobileOpen.update((v) => !v);
   }
@@ -139,18 +137,10 @@ export class PosComponent {
     });
   }
 
-  updateQuantity(id: string, delta: number) {
-    this.cartService.updateQuantity(id, delta);
-  }
-
   clearCart() {
     if (confirm("¿Vaciar todo el carrito?")) {
       this.cartService.clearCart();
     }
-  }
-
-  getStockRemaining(p: Product): number {
-    return this.cartService.getStockRemaining(p.id, p.stock);
   }
 
   procesarVenta() {
@@ -162,7 +152,6 @@ export class PosComponent {
       alert("El carrito está vacío");
       return;
     }
-    // Lógica de venta
     console.log("Procesando venta:", this.cartService.items());
     alert("Simulación: Venta procesada con éxito");
     this.cartService.clearCart();
