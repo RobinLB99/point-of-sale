@@ -3,6 +3,7 @@ import { UIService } from "../../services/ui.service";
 import { CommonModule } from "@angular/common";
 import { RouterLink, RouterOutlet, Router } from "@angular/router";
 import { CashControlService } from "../../services/cash-control.service";
+import { PageHeaderComponent } from "../../components/page-header/page-header";
 
 // Nuevos Componentes
 import { CashStatsComponent } from "./components/cash-stats/cash-stats";
@@ -15,6 +16,7 @@ import { CashMovementTableComponent } from "./components/cash-movement-table/cas
   imports: [
     CommonModule,
     RouterOutlet,
+    PageHeaderComponent,
     CashStatsComponent,
     CashActionBarComponent,
     CashMovementTableComponent,
@@ -34,10 +36,6 @@ export class CashControlComponent {
   isCashOpen = this.cashControlService.isCashOpen;
   cashStatus = this.cashControlService.cashStatus;
   movements = this.cashControlService.movements;
-
-  toggleSidebar() {
-    this.uiService.toggleSidebar();
-  }
 
   closeCashRegister() {
     if (

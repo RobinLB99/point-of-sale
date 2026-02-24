@@ -4,6 +4,7 @@ import { RouterModule, Router } from "@angular/router";
 import { UIService } from "../../services/ui.service";
 import { CartService } from "../../services/cart.service";
 import { CashControlService } from "../../services/cash-control.service";
+import { PageHeaderComponent } from "../../components/page-header/page-header";
 
 // Componentes del POS
 import { DesktopCartComponent } from "./components/desktop-cart/desktop-cart";
@@ -27,6 +28,7 @@ interface Product {
   imports: [
     CommonModule,
     RouterModule,
+    PageHeaderComponent,
     DesktopCartComponent,
     MobileCartComponent,
     PosActionBarComponent,
@@ -118,10 +120,6 @@ export class PosComponent {
   });
 
   // UI Actions
-  toggleSidebar() {
-    this.uiService.toggleSidebar();
-  }
-
   toggleCartMobile() {
     this.isCartMobileOpen.update((v) => !v);
   }

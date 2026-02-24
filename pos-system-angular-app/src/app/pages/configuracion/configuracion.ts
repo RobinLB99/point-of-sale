@@ -2,6 +2,7 @@ import { Component, inject } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { UIService } from "../../services/ui.service";
 import { SettingsService } from "../../services/settings.service";
+import { PageHeaderComponent } from "../../components/page-header/page-header";
 import { ConfigNegocioComponent } from "./components/config-negocio/config-negocio";
 import { ConfigTicketComponent } from "./components/config-ticket/config-ticket";
 import { ConfigSistemaComponent } from "./components/config-sistema/config-sistema";
@@ -11,6 +12,7 @@ import { ConfigSistemaComponent } from "./components/config-sistema/config-siste
   standalone: true,
   imports: [
     CommonModule,
+    PageHeaderComponent,
     ConfigNegocioComponent,
     ConfigTicketComponent,
     ConfigSistemaComponent,
@@ -23,10 +25,6 @@ import { ConfigSistemaComponent } from "./components/config-sistema/config-siste
 export class ConfiguracionComponent {
   private uiService = inject(UIService);
   private settingsService = inject(SettingsService);
-
-  toggleSidebar() {
-    this.uiService.toggleSidebar();
-  }
 
   saveAll() {
     this.settingsService.saveAll();

@@ -4,6 +4,7 @@ import { FormsModule } from "@angular/forms";
 import { SupplierService } from "../../services/supplier.service";
 import { UIService } from "../../services/ui.service";
 import { Supplier, DAYS_OF_WEEK } from "../../models/supplier.model";
+import { PageHeaderComponent } from "../../components/page-header/page-header";
 
 // Nuevos Componentes
 import { SupplierStatsComponent } from "./components/supplier-stats/supplier-stats";
@@ -17,6 +18,7 @@ import { SupplierFormModalComponent } from "./components/supplier-form-modal/sup
   imports: [
     CommonModule,
     FormsModule,
+    PageHeaderComponent,
     SupplierStatsComponent,
     SupplierActionBarComponent,
     SupplierTableComponent,
@@ -31,11 +33,6 @@ import { SupplierFormModalComponent } from "./components/supplier-form-modal/sup
 export class SuppliersComponent {
   private supplierService = inject(SupplierService);
   private uiService = inject(UIService);
-
-  // UI State
-  toggleSidebar() {
-    this.uiService.toggleSidebar();
-  }
 
   // Data from Service
   totalSuppliers = this.supplierService.totalSuppliers;

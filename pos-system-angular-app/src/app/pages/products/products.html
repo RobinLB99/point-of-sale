@@ -1,21 +1,6 @@
 <div class="flex flex-col h-full overflow-hidden relative bg-gray-olive-50">
   <!-- Header Estándar -->
-  <header
-    class="h-16 bg-white border-b border-grey-olive-200 flex items-center justify-between px-4 lg:px-8 shadow-sm relative z-10 shrink-0"
-  >
-    <div class="flex items-center gap-3">
-      <button
-        (click)="toggleSidebar()"
-        class="lg:hidden text-pale-slate-700 p-2 -ml-2 rounded-md hover:bg-grey-olive-100 focus:outline-none"
-      >
-        <i class="ph ph-list text-2xl"></i>
-      </button>
-
-      <h1 class="text-lg lg:text-xl font-bold text-pale-slate-900 ml-2 lg:ml-0">
-        Productos
-      </h1>
-    </div>
-  </header>
+  <app-page-header title="Inventario"></app-page-header>
 
   <!-- Contenido Scrollable -->
   <div class="flex-1 overflow-y-auto p-4 lg:p-8 scroll-smooth">
@@ -48,9 +33,7 @@
   (onClose)="closeModal()"
   (onSave)="handleSaveProduct($event)"
 ></app-product-form-modal>
-}
-
-@if (isRestockModalOpen()) {
+} @if (isRestockModalOpen()) {
 <app-product-restock-modal
   [product]="productToRestock()"
   (onClose)="closeModal()"

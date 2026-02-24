@@ -1,14 +1,14 @@
 import { Component, inject } from "@angular/core";
 import { UIService } from "../../services/ui.service";
 import { CashControlService } from "../../services/cash-control.service";
-import { Header } from "./components/header/header";
+import { PageHeaderComponent } from "../../components/page-header/page-header";
 import { CardGroup } from "./components/card-group/card-group";
 import { TransactionTable } from "./components/transaction-table/transaction-table";
 
 @Component({
   selector: "app-dashboard",
   standalone: true,
-  imports: [Header, CardGroup, TransactionTable],
+  imports: [PageHeaderComponent, CardGroup, TransactionTable],
   templateUrl: "./dashboard.html",
   styleUrl: "./dashboard.css",
 })
@@ -17,8 +17,4 @@ export class Dashboard {
   cashControlService = inject(CashControlService);
 
   isCashOpen = this.cashControlService.isCashOpen;
-
-  toggleSidebar() {
-    this.uiService.toggleSidebar();
-  }
 }

@@ -3,6 +3,7 @@ import { CommonModule } from "@angular/common";
 import { ProductService } from "../../services/product.service";
 import { UIService } from "../../services/ui.service";
 import { Product } from "../../models/product.model";
+import { PageHeaderComponent } from "../../components/page-header/page-header";
 
 // Nuevos Componentes
 import { ProductStatsComponent } from "./components/product-stats/product-stats";
@@ -16,6 +17,7 @@ import { ProductRestockModalComponent } from "./components/product-restock-modal
   standalone: true,
   imports: [
     CommonModule,
+    PageHeaderComponent,
     ProductStatsComponent,
     ProductActionBarComponent,
     ProductTableComponent,
@@ -31,11 +33,6 @@ import { ProductRestockModalComponent } from "./components/product-restock-modal
 export class ProductsComponent {
   private productService = inject(ProductService);
   private uiService = inject(UIService);
-
-  // UI Control
-  toggleSidebar() {
-    this.uiService.toggleSidebar();
-  }
 
   // Search and Filters
   searchTerm = signal("");

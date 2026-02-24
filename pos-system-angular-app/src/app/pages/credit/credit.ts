@@ -4,6 +4,7 @@ import { RouterLink, Router } from "@angular/router";
 import { CreditService, Debtor } from "../../services/credit.service";
 import { UIService } from "../../services/ui.service";
 import { CashControlService } from "../../services/cash-control.service";
+import { PageHeaderComponent } from "../../components/page-header/page-header";
 
 // Nuevos Componentes
 import { CreditStatsComponent } from "./components/credit-stats/credit-stats";
@@ -18,6 +19,7 @@ import { AbonoModalComponent } from "./components/abono-modal/abono-modal";
   imports: [
     CommonModule,
     RouterLink,
+    PageHeaderComponent,
     CreditStatsComponent,
     CreditActionBarComponent,
     DebtorTableComponent,
@@ -45,10 +47,6 @@ export class CreditComponent {
         (d) => d.name.toLowerCase().includes(term) || d.phone.includes(term),
       );
   });
-
-  toggleSidebar() {
-    this.uiService.toggleSidebar();
-  }
 
   selectDebtor(debtor: Debtor) {
     this.selectedDebtor.set(debtor);

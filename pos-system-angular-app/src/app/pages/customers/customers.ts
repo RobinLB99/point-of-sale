@@ -4,6 +4,7 @@ import { FormsModule } from "@angular/forms";
 import { CustomerService } from "../../services/customer.service";
 import { UIService } from "../../services/ui.service";
 import { Customer } from "../../models/customer.model";
+import { PageHeaderComponent } from "../../components/page-header/page-header";
 
 // Nuevos Componentes
 import { CustomerStatsComponent } from "./components/customer-stats/customer-stats";
@@ -17,6 +18,7 @@ import { CustomerFormModalComponent } from "./components/customer-form-modal/cus
   imports: [
     CommonModule,
     FormsModule,
+    PageHeaderComponent,
     CustomerStatsComponent,
     CustomerActionBarComponent,
     CustomerTableComponent,
@@ -31,11 +33,6 @@ import { CustomerFormModalComponent } from "./components/customer-form-modal/cus
 export class CustomersComponent {
   private customerService = inject(CustomerService);
   private uiService = inject(UIService);
-
-  // UI State
-  toggleSidebar() {
-    this.uiService.toggleSidebar();
-  }
 
   // Data from Service
   totalCustomers = this.customerService.totalCustomers;
