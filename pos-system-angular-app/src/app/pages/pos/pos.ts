@@ -26,7 +26,6 @@ interface Product {
   standalone: true,
   imports: [
     CommonModule,
-    CurrencyPipe,
     RouterModule,
     DesktopCartComponent,
     MobileCartComponent,

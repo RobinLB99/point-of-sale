@@ -1,37 +1,78 @@
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
-  <div class="bg-white p-6 rounded-xl border border-grey-olive-200 shadow-sm">
-    <div class="flex items-center justify-between mb-4">
-      <div class="p-3 bg-soft-linen-100 rounded-lg text-soft-linen-700">
-        <i class="ph ph-currency-dollar text-xl"></i>
-      </div>
-      <span
-        class="text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded"
-        >+12%</span
-      >
-    </div>
-    <h3 class="text-2xl font-bold text-pale-slate-900">$1,240.50</h3>
-    <p class="text-sm text-grey-olive-500">Ventas de hoy</p>
-  </div>
-
-  <div class="bg-white p-6 rounded-xl border border-grey-olive-200 shadow-sm">
-    <div class="flex items-center justify-between mb-4">
-      <div class="p-3 bg-lavender-grey-100 rounded-lg text-lavender-grey-700">
-        <i class="ph ph-receipt text-xl"></i>
-      </div>
-    </div>
-    <h3 class="text-2xl font-bold text-pale-slate-900">45</h3>
-    <p class="text-sm text-grey-olive-500">Tickets generados</p>
-  </div>
-
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+  <!-- Ventas de Hoy (Destacada) -->
   <div
-    class="bg-white p-6 rounded-xl border border-grey-olive-200 shadow-sm sm:col-span-2 lg:col-span-1"
+    class="bg-white p-6 rounded-xl border-2 border-soft-linen-100 shadow-md flex items-center gap-4 relative overflow-hidden group hover:shadow-lg transition-shadow min-h-30"
   >
-    <div class="flex items-center justify-between mb-4">
-      <div class="p-3 bg-pale-slate-100 rounded-lg text-pale-slate-700">
-        <i class="ph ph-users text-xl"></i>
-      </div>
+    <div
+      class="absolute top-0 right-0 w-24 h-24 bg-soft-linen-500/5 rounded-full -mr-8 -mt-8"
+    ></div>
+    <div
+      class="w-14 h-14 bg-soft-linen-100 rounded-2xl flex items-center justify-center text-soft-linen-600 group-hover:bg-soft-linen-600 group-hover:text-white transition-all shrink-0"
+    >
+      <i class="ph-bold ph-currency-dollar text-2xl"></i>
     </div>
-    <h3 class="text-2xl font-bold text-pale-slate-900">12</h3>
-    <p class="text-sm text-grey-olive-500">Clientes Nuevos</p>
+    <div class="flex-1 min-w-0">
+      <div class="flex items-center justify-between mb-0.5">
+        <p
+          class="text-xs font-bold text-soft-linen-600 uppercase tracking-widest truncate"
+        >
+          Ventas de Hoy
+        </p>
+        <span
+          class="text-[10px] font-black text-green-600 bg-green-100 px-2 py-0.5 rounded-full shrink-0"
+          >+12%</span
+        >
+      </div>
+      <h3 class="text-3xl font-black text-soft-linen-700 leading-none">
+        $1,240.50
+      </h3>
+      <p class="text-[10px] font-bold text-soft-linen-500 mt-1 italic">
+        Cierre proyectado positivo
+      </p>
+    </div>
+  </div>
+
+  <!-- Tickets Generados -->
+  <div
+    class="bg-white p-6 rounded-xl border border-grey-olive-200 shadow-sm flex items-center gap-4 group hover:shadow-md transition-shadow min-h-30"
+  >
+    <div
+      class="w-14 h-14 bg-pale-slate-100 rounded-2xl flex items-center justify-center text-pale-slate-600 group-hover:bg-pale-slate-900 group-hover:text-white transition-all shrink-0"
+    >
+      <i class="ph-bold ph-receipt text-2xl"></i>
+    </div>
+    <div class="flex-1 min-w-0">
+      <p
+        class="text-xs font-bold text-grey-olive-400 uppercase tracking-widest mb-0.5 truncate"
+      >
+        Tickets Emitidos
+      </p>
+      <h3 class="text-3xl font-black text-pale-slate-900 leading-none">45</h3>
+      <p class="text-[10px] font-medium text-pale-slate-400 mt-1">
+        Transacciones procesadas hoy
+      </p>
+    </div>
+  </div>
+
+  <!-- Clientes Nuevos -->
+  <div
+    class="bg-white p-6 rounded-xl border border-grey-olive-200 shadow-sm flex items-center gap-4 group hover:shadow-md transition-shadow min-h-30"
+  >
+    <div
+      class="w-14 h-14 bg-grey-olive-100 rounded-2xl flex items-center justify-center text-grey-olive-600 group-hover:bg-pale-slate-900 group-hover:text-white transition-all shrink-0"
+    >
+      <i class="ph-bold ph-users text-2xl"></i>
+    </div>
+    <div class="flex-1 min-w-0">
+      <p
+        class="text-xs font-bold text-grey-olive-400 uppercase tracking-widest mb-0.5 truncate"
+      >
+        Nuevos Clientes
+      </p>
+      <h3 class="text-3xl font-black text-pale-slate-900 leading-none">12</h3>
+      <p class="text-[10px] font-medium text-pale-slate-400 mt-1">
+        Registros en las últimas 24h
+      </p>
+    </div>
   </div>
 </div>

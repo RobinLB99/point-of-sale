@@ -1,0 +1,41 @@
+<div class="flex flex-wrap gap-4 mb-8">
+  <a
+    routerLink="expense"
+    [class.pointer-events-none]="!isCashOpen()"
+    [class.opacity-50]="!isCashOpen()"
+    class="flex-1 min-w-[160px] bg-white hover:bg-red-50 text-red-600 border border-red-200 px-6 py-3 rounded-xl font-bold flex items-center justify-center gap-3 transition-all hover:shadow-lg active:scale-95"
+  >
+    <i class="ph-bold ph-minus-circle text-xl"></i>
+    Registrar Gasto
+  </a>
+  <a
+    routerLink="income"
+    [class.pointer-events-none]="!isCashOpen()"
+    [class.opacity-50]="!isCashOpen()"
+    class="flex-1 min-w-[160px] bg-white hover:bg-green-50 text-green-600 border border-green-200 px-6 py-3 rounded-xl font-bold flex items-center justify-center gap-3 transition-all hover:shadow-lg active:scale-95"
+  >
+    <i class="ph-bold ph-plus-circle text-xl"></i>
+    Ingresar Dinero
+  </a>
+
+  <ng-container *ngIf="isCashOpen(); else openCash">
+    <button
+      (click)="onCloseCash.emit()"
+      class="flex-1 min-w-[160px] bg-pale-slate-900 hover:bg-pale-slate-800 text-white px-6 py-3 rounded-xl font-bold flex items-center justify-center gap-3 transition-all hover:shadow-lg active:scale-95"
+    >
+      <i class="ph-bold ph-lock text-xl"></i>
+      CERRAR CAJA
+    </button>
+  </ng-container>
+
+  <ng-template #openCash>
+    <a
+      [routerLink]="['/open-cash']"
+      [queryParams]="{ returnUrl: currentUrl() }"
+      class="flex-1 min-w-[160px] bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-3 rounded-xl font-bold flex items-center justify-center gap-3 transition-all hover:shadow-lg active:scale-95"
+    >
+      <i class="ph-bold ph-door-open text-xl"></i>
+      ABRIR CAJA
+    </a>
+  </ng-template>
+</div>

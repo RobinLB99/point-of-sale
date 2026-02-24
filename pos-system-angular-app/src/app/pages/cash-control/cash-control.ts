@@ -2,12 +2,23 @@ import { Component, inject } from "@angular/core";
 import { UIService } from "../../services/ui.service";
 import { CommonModule } from "@angular/common";
 import { RouterLink, RouterOutlet, Router } from "@angular/router";
-import { CashControlService } from "../../services/cash-control.service"; // Import the service
+import { CashControlService } from "../../services/cash-control.service";
+
+// Nuevos Componentes
+import { CashStatsComponent } from "./components/cash-stats/cash-stats";
+import { CashActionBarComponent } from "./components/cash-action-bar/cash-action-bar";
+import { CashMovementTableComponent } from "./components/cash-movement-table/cash-movement-table";
 
 @Component({
   selector: "app-cash-control",
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterOutlet],
+  imports: [
+    CommonModule,
+    RouterOutlet,
+    CashStatsComponent,
+    CashActionBarComponent,
+    CashMovementTableComponent,
+  ],
   templateUrl: "./cash-control.html",
   styleUrl: "./cash-control.css",
   host: {
@@ -17,7 +28,7 @@ import { CashControlService } from "../../services/cash-control.service"; // Imp
 export class CashControlComponent {
   public router = inject(Router);
   private uiService = inject(UIService);
-  public cashControlService = inject(CashControlService); // Make public for template access
+  public cashControlService = inject(CashControlService);
 
   // Access state directly from the service
   isCashOpen = this.cashControlService.isCashOpen;
@@ -28,7 +39,6 @@ export class CashControlComponent {
     this.uiService.toggleSidebar();
   }
 
-  // Delegate cash register operations to the service
   closeCashRegister() {
     if (
       confirm(
@@ -37,5 +47,10 @@ export class CashControlComponent {
     ) {
       this.cashControlService.closeCashRegister();
     }
+  }
+
+  exportMovements() {
+    console.log("Exportando movimientos...");
+    // Implementación futura de exportación
   }
 }

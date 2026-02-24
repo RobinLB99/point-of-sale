@@ -1,1 +1,103 @@
-<p>product-stats works!</p>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+  <!-- Total Productos -->
+  <div
+    class="bg-white p-6 rounded-xl border border-grey-olive-200 shadow-sm flex items-center gap-4 group hover:shadow-md transition-shadow min-h-30"
+  >
+    <div
+      class="w-14 h-14 bg-pale-slate-100 rounded-2xl flex items-center justify-center text-pale-slate-600 group-hover:bg-pale-slate-900 group-hover:text-white transition-all shrink-0"
+    >
+      <i class="ph-bold ph-package text-2xl"></i>
+    </div>
+    <div class="flex-1 min-w-0">
+      <p
+        class="text-xs font-bold text-grey-olive-400 uppercase tracking-widest truncate"
+      >
+        Total Productos
+      </p>
+      <h3 class="text-3xl font-black text-pale-slate-900 leading-none">
+        {{ totalProducts() }}
+      </h3>
+      <p class="text-[10px] font-medium text-pale-slate-400 mt-1">
+        Items en inventario
+      </p>
+    </div>
+  </div>
+
+  <!-- Alertas de Stock -->
+  <div
+    class="bg-white p-6 rounded-xl border-2 border-red-50 shadow-md flex items-center gap-4 relative overflow-hidden group hover:shadow-lg transition-shadow min-h-30"
+  >
+    <div
+      class="absolute top-0 right-0 w-24 h-24 bg-red-500/5 rounded-full -mr-8 -mt-8"
+    ></div>
+    <div
+      class="w-14 h-14 bg-red-50 rounded-2xl flex items-center justify-center text-red-500 group-hover:bg-red-600 group-hover:text-white transition-all shrink-0"
+    >
+      <i class="ph-bold ph-warning-circle text-2xl"></i>
+    </div>
+    <div class="flex-1 min-w-0">
+      <p
+        class="text-xs font-bold text-red-600 uppercase tracking-widest truncate"
+      >
+        Alertas Stock
+      </p>
+      <h3 class="text-3xl font-black text-red-700 leading-none">
+        {{ stockAlerts() }}
+      </h3>
+      <p class="text-[10px] font-bold text-red-400 mt-1 italic">
+        Productos por agotarse
+      </p>
+    </div>
+  </div>
+
+  <!-- Valor del Inventario -->
+  <div
+    class="bg-white p-6 rounded-xl border border-grey-olive-200 shadow-sm flex items-center gap-4 group hover:shadow-md transition-shadow min-h-30"
+  >
+    <div
+      class="w-14 h-14 bg-green-50 rounded-2xl flex items-center justify-center text-green-600 group-hover:bg-green-600 group-hover:text-white transition-all shrink-0"
+    >
+      <i class="ph-bold ph-currency-dollar text-2xl"></i>
+    </div>
+    <div class="flex-1 min-w-0">
+      <p
+        class="text-xs font-bold text-grey-olive-400 uppercase tracking-widest truncate"
+      >
+        Valor Total
+      </p>
+      <h3 class="text-3xl font-black text-pale-slate-900 leading-none">
+        {{ inventoryValue() | currency }}
+      </h3>
+      <p class="text-[10px] font-medium text-pale-slate-400 mt-1">
+        Capital invertido
+      </p>
+    </div>
+  </div>
+
+  <!-- Categoría Principal -->
+  <div
+    class="bg-white p-6 rounded-xl border border-grey-olive-200 shadow-sm flex items-center gap-4 group hover:shadow-md transition-shadow min-h-30"
+  >
+    <div
+      class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all shrink-0"
+    >
+      <i class="ph-bold ph-tag text-2xl"></i>
+    </div>
+    <div class="flex-1 min-w-0">
+      <p
+        class="text-xs font-bold text-grey-olive-400 uppercase tracking-widest truncate"
+      >
+        Top Categoría
+      </p>
+      <h3
+        class="text-3xl font-black text-pale-slate-900 leading-none truncate"
+        [title]="mainCategory()"
+      >
+        {{ mainCategory() }}
+      </h3>
+      <p class="text-[10px] font-medium text-pale-slate-400 mt-1">
+        Mayor volumen
+      </p>
+    </div>
+  </div>
+</div>

@@ -1,42 +1,85 @@
-<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-  <div class="bg-white p-6 rounded-xl border border-grey-olive-200 shadow-sm">
-    <p
-      class="text-xs font-bold text-grey-olive-500 uppercase tracking-widest mb-1"
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+  <!-- Total Fiado -->
+  <div
+    class="bg-white p-6 rounded-xl border-2 border-red-50 shadow-md flex items-center gap-4 relative overflow-hidden group hover:shadow-lg transition-shadow min-h-[120px]"
+  >
+    <div
+      class="absolute top-0 right-0 w-24 h-24 bg-red-500/5 rounded-full -mr-8 -mt-8"
+    ></div>
+    <div
+      class="w-14 h-14 bg-red-50 rounded-2xl flex items-center justify-center text-red-500 group-hover:bg-red-600 group-hover:text-white transition-all flex-shrink-0"
     >
-      Total Fiado
-    </p>
-    <h3 class="text-2xl font-bold text-red-600">
-      {{ creditService.totalFiado() | currency }}
-    </h3>
-    <p class="text-xs text-grey-olive-400 mt-2">Dinero en la calle</p>
+      <i class="ph-bold ph-hand-coins text-2xl"></i>
+    </div>
+    <div class="flex-1 min-w-0">
+      <p
+        class="text-xs font-bold text-red-600 uppercase tracking-widest truncate"
+      >
+        Total Fiado
+      </p>
+      <h3 class="text-3xl font-black text-red-700 leading-none">
+        {{ creditService.totalFiado() | currency }}
+      </h3>
+      <p class="text-[10px] font-bold text-red-400 mt-1 italic">
+        Dinero en la calle
+      </p>
+    </div>
   </div>
 
-  <div class="bg-white p-6 rounded-xl border border-grey-olive-200 shadow-sm">
-    <p
-      class="text-xs font-bold text-grey-olive-500 uppercase tracking-widest mb-1"
+  <!-- Clientes con Deuda -->
+  <div
+    class="bg-white p-6 rounded-xl border border-grey-olive-200 shadow-sm flex items-center gap-4 group hover:shadow-md transition-shadow min-h-[120px]"
+  >
+    <div
+      class="w-14 h-14 bg-pale-slate-100 rounded-2xl flex items-center justify-center text-pale-slate-600 group-hover:bg-pale-slate-900 group-hover:text-white transition-all flex-shrink-0"
     >
-      Clientes con Deuda
-    </p>
-    <h3 class="text-2xl font-bold text-pale-slate-900">
-      {{ creditService.debtorCount() }}
-    </h3>
-    <p class="text-xs text-grey-olive-400 mt-2">Vecinos registrados</p>
+      <i class="ph-bold ph-users-three text-2xl"></i>
+    </div>
+    <div class="flex-1 min-w-0">
+      <p
+        class="text-xs font-bold text-grey-olive-400 uppercase tracking-widest truncate"
+      >
+        Deudores
+      </p>
+      <h3 class="text-3xl font-black text-pale-slate-900 leading-none">
+        {{ creditService.debtorCount() }}
+      </h3>
+      <p class="text-[10px] font-medium text-pale-slate-400 mt-1">
+        Vecinos registrados
+      </p>
+    </div>
   </div>
 
-  <div class="bg-white p-6 rounded-xl border border-grey-olive-200 shadow-sm">
-    <p
-      class="text-xs font-bold text-grey-olive-500 uppercase tracking-widest mb-1"
+  <!-- Al Límite -->
+  <div
+    class="bg-white p-6 rounded-xl border border-grey-olive-200 shadow-sm flex items-center gap-4 group hover:shadow-md transition-shadow min-h-[120px]"
+  >
+    <div
+      class="w-14 h-14 bg-orange-50 rounded-2xl flex items-center justify-center text-orange-500 group-hover:bg-orange-600 group-hover:text-white transition-all flex-shrink-0"
     >
-      Al límite de crédito
-    </p>
-    <h3 class="text-2xl font-bold text-yellow-600">
-      {{ creditService.atLimitCount() }}
-    </h3>
-    <p
-      class="text-xs text-red-500 mt-2 font-bold animate-pulse"
-      *ngIf="creditService.atLimitCount() > 0"
-    >
-      Requieren atención
-    </p>
+      <i class="ph-bold ph-warning-circle text-2xl"></i>
+    </div>
+    <div class="flex-1 min-w-0">
+      <p
+        class="text-xs font-bold text-grey-olive-400 uppercase tracking-widest truncate"
+      >
+        Al Límite
+      </p>
+      <h3 class="text-3xl font-black text-orange-600 leading-none">
+        {{ creditService.atLimitCount() }}
+      </h3>
+      <p
+        class="text-[10px] font-bold text-red-500 mt-1 animate-pulse"
+        *ngIf="creditService.atLimitCount() > 0"
+      >
+        Requieren atención inmediata
+      </p>
+      <p
+        class="text-[10px] font-medium text-pale-slate-400 mt-1"
+        *ngIf="creditService.atLimitCount() === 0"
+      >
+        Sin alertas críticas
+      </p>
+    </div>
   </div>
 </div>

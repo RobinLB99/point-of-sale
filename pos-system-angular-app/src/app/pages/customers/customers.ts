@@ -1,20 +1,27 @@
 import { Component, inject, signal, computed } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import {
-  FormsModule,
-  ReactiveFormsModule,
-  FormBuilder,
-  FormGroup,
-  Validators,
-} from "@angular/forms";
+import { FormsModule } from "@angular/forms";
 import { CustomerService } from "../../services/customer.service";
 import { UIService } from "../../services/ui.service";
-import { Customer, CustomerStatus } from "../../models/customer.model";
+import { Customer } from "../../models/customer.model";
+
+// Nuevos Componentes
+import { CustomerStatsComponent } from "./components/customer-stats/customer-stats";
+import { CustomerActionBarComponent } from "./components/customer-action-bar/customer-action-bar";
+import { CustomerTableComponent } from "./components/customer-table/customer-table";
+import { CustomerFormModalComponent } from "./components/customer-form-modal/customer-form-modal";
 
 @Component({
   selector: "app-customers",
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    CustomerStatsComponent,
+    CustomerActionBarComponent,
+    CustomerTableComponent,
+    CustomerFormModalComponent,
+  ],
   templateUrl: "./customers.html",
   styleUrl: "./customers.css",
   host: {
@@ -24,7 +31,6 @@ import { Customer, CustomerStatus } from "../../models/customer.model";
 export class CustomersComponent {
   private customerService = inject(CustomerService);
   private uiService = inject(UIService);
-  private fb = inject(FormBuilder);
 
   // UI State
   toggleSidebar() {
@@ -64,33 +70,14 @@ export class CustomersComponent {
   // Modal State
   isModalOpen = signal(false);
   editingCustomer = signal<Customer | null>(null);
-  customerForm: FormGroup;
-
-  constructor() {
-    this.customerForm = this.fb.group({
-      name: ["", [Validators.required]],
-      phone: [""],
-      cedula: [""],
-      creditLimit: [0, [Validators.required, Validators.min(0)]],
-      currentDebt: [0, [Validators.required, Validators.min(0)]],
-    });
-  }
 
   openNewCustomerModal() {
     this.editingCustomer.set(null);
-    this.customerForm.reset({
-      name: "",
-      phone: "",
-      cedula: "",
-      creditLimit: 0,
-      currentDebt: 0,
-    });
     this.isModalOpen.set(true);
   }
 
   openEditCustomerModal(customer: Customer) {
     this.editingCustomer.set(customer);
-    this.customerForm.patchValue(customer);
     this.isModalOpen.set(true);
   }
 
@@ -98,16 +85,13 @@ export class CustomersComponent {
     this.isModalOpen.set(false);
   }
 
-  saveCustomer() {
-    if (this.customerForm.valid) {
-      const data = this.customerForm.value;
-      if (this.editingCustomer()) {
-        this.customerService.updateCustomer(this.editingCustomer()!.id, data);
-      } else {
-        this.customerService.addCustomer(data);
-      }
-      this.closeModal();
+  saveCustomer(data: any) {
+    if (this.editingCustomer()) {
+      this.customerService.updateCustomer(this.editingCustomer()!.id, data);
+    } else {
+      this.customerService.addCustomer(data);
     }
+    this.closeModal();
   }
 
   deleteCustomer(id: string) {

@@ -1,0 +1,100 @@
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+  <!-- Saldo Inicial -->
+  <div
+    class="bg-white p-6 rounded-xl border border-grey-olive-200 shadow-sm flex items-center gap-4 group hover:shadow-md transition-shadow min-h-[120]"
+  >
+    <div
+      class="w-14 h-14 bg-pale-slate-100 rounded-2xl flex items-center justify-center text-pale-slate-600 group-hover:bg-pale-slate-900 group-hover:text-white transition-all shrink-0"
+    >
+      <i class="ph-bold ph-bank text-2xl"></i>
+    </div>
+    <div class="flex-1 min-w-0">
+      <p
+        class="text-xs font-bold text-grey-olive-400 uppercase tracking-widest truncate"
+      >
+        Saldo Inicial
+      </p>
+      <h3 class="text-3xl font-black text-pale-slate-900 leading-none">
+        {{ initialBalance() | currency }}
+      </h3>
+      <p class="text-[10px] font-medium text-pale-slate-400 mt-1">
+        Abierta a las {{ openedAt() }}
+      </p>
+    </div>
+  </div>
+
+  <!-- Ventas Efectivo -->
+  <div
+    class="bg-white p-6 rounded-xl border border-grey-olive-200 shadow-sm flex items-center gap-4 group hover:shadow-md transition-shadow min-h-30"
+  >
+    <div
+      class="w-14 h-14 bg-green-50 rounded-2xl flex items-center justify-center text-green-600 group-hover:bg-green-600 group-hover:text-white transition-all shrink-0"
+    >
+      <i class="ph-bold ph-trend-up text-2xl"></i>
+    </div>
+    <div class="flex-1 min-w-0">
+      <p
+        class="text-xs font-bold text-grey-olive-400 uppercase tracking-widest truncate"
+      >
+        Ventas Efectivo
+      </p>
+      <h3 class="text-3xl font-black text-green-600 leading-none">
+        +{{ cashSales() | currency }}
+      </h3>
+      <p class="text-[10px] font-medium text-pale-slate-400 mt-1">
+        Suma automática del día
+      </p>
+    </div>
+  </div>
+
+  <!-- Salidas/Gastos -->
+  <div
+    class="bg-white p-6 rounded-xl border border-grey-olive-200 shadow-sm flex items-center gap-4 group hover:shadow-md transition-shadow min-h-30"
+  >
+    <div
+      class="w-14 h-14 bg-red-50 rounded-2xl flex items-center justify-center text-red-500 group-hover:bg-red-600 group-hover:text-white transition-all shrink-0"
+    >
+      <i class="ph-bold ph-trend-down text-2xl"></i>
+    </div>
+    <div class="flex-1 min-w-0">
+      <p
+        class="text-xs font-bold text-grey-olive-400 uppercase tracking-widest truncate"
+      >
+        Salidas/Gastos
+      </p>
+      <h3 class="text-3xl font-black text-red-600 leading-none">
+        -{{ expenses() | currency }}
+      </h3>
+      <p class="text-[10px] font-medium text-pale-slate-400 mt-1">
+        Retiros manuales registrados
+      </p>
+    </div>
+  </div>
+
+  <!-- Total Esperado (Destacada) -->
+  <div
+    class="bg-white p-6 rounded-xl border-2 border-soft-linen-100 shadow-md flex items-center gap-4 relative overflow-hidden group hover:shadow-lg transition-shadow min-h-30"
+  >
+    <div
+      class="absolute top-0 right-0 w-24 h-24 bg-soft-linen-500/5 rounded-full -mr-8 -mt-8"
+    ></div>
+    <div
+      class="w-14 h-14 bg-soft-linen-100 rounded-2xl flex items-center justify-center text-soft-linen-600 group-hover:bg-soft-linen-600 group-hover:text-white transition-all shrink-0"
+    >
+      <i class="ph-bold ph-money text-2xl"></i>
+    </div>
+    <div class="flex-1 min-w-0">
+      <p
+        class="text-xs font-bold text-soft-linen-600 uppercase tracking-widest truncate"
+      >
+        Total Esperado
+      </p>
+      <h3 class="text-3xl font-black text-soft-linen-700 leading-none">
+        {{ expectedTotal() | currency }}
+      </h3>
+      <p class="text-[10px] font-bold text-soft-linen-500 mt-1 italic">
+        Dinero real en cajón
+      </p>
+    </div>
+  </div>
+</div>

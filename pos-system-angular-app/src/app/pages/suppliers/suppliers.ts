@@ -1,20 +1,27 @@
 import { Component, inject, signal, computed } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import {
-  FormsModule,
-  ReactiveFormsModule,
-  FormBuilder,
-  FormGroup,
-  Validators,
-} from "@angular/forms";
+import { FormsModule } from "@angular/forms";
 import { SupplierService } from "../../services/supplier.service";
 import { UIService } from "../../services/ui.service";
 import { Supplier, DAYS_OF_WEEK } from "../../models/supplier.model";
 
+// Nuevos Componentes
+import { SupplierStatsComponent } from "./components/supplier-stats/supplier-stats";
+import { SupplierActionBarComponent } from "./components/supplier-action-bar/supplier-action-bar";
+import { SupplierTableComponent } from "./components/supplier-table/supplier-table";
+import { SupplierFormModalComponent } from "./components/supplier-form-modal/supplier-form-modal";
+
 @Component({
   selector: "app-suppliers",
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    SupplierStatsComponent,
+    SupplierActionBarComponent,
+    SupplierTableComponent,
+    SupplierFormModalComponent,
+  ],
   templateUrl: "./suppliers.html",
   styleUrl: "./suppliers.css",
   host: {
@@ -24,7 +31,6 @@ import { Supplier, DAYS_OF_WEEK } from "../../models/supplier.model";
 export class SuppliersComponent {
   private supplierService = inject(SupplierService);
   private uiService = inject(UIService);
-  private fb = inject(FormBuilder);
 
   // UI State
   toggleSidebar() {
@@ -64,33 +70,14 @@ export class SuppliersComponent {
   // Modal State
   isModalOpen = signal(false);
   editingSupplier = signal<Supplier | null>(null);
-  supplierForm: FormGroup;
-
-  constructor() {
-    this.supplierForm = this.fb.group({
-      empresa: ["", [Validators.required]],
-      vendedor: ["", [Validators.required]],
-      telefono: ["", [Validators.required]],
-      diaVisita: ["Lunes", [Validators.required]],
-      activo: [true],
-    });
-  }
 
   openNewSupplierModal() {
     this.editingSupplier.set(null);
-    this.supplierForm.reset({
-      empresa: "",
-      vendedor: "",
-      telefono: "",
-      diaVisita: "Lunes",
-      activo: true,
-    });
     this.isModalOpen.set(true);
   }
 
   openEditSupplierModal(supplier: Supplier) {
     this.editingSupplier.set(supplier);
-    this.supplierForm.patchValue(supplier);
     this.isModalOpen.set(true);
   }
 
@@ -98,16 +85,13 @@ export class SuppliersComponent {
     this.isModalOpen.set(false);
   }
 
-  saveSupplier() {
-    if (this.supplierForm.valid) {
-      const data = this.supplierForm.value;
-      if (this.editingSupplier()) {
-        this.supplierService.updateSupplier(this.editingSupplier()!.id, data);
-      } else {
-        this.supplierService.addSupplier(data);
-      }
-      this.closeModal();
+  saveSupplier(data: any) {
+    if (this.editingSupplier()) {
+      this.supplierService.updateSupplier(this.editingSupplier()!.id, data);
+    } else {
+      this.supplierService.addSupplier(data);
     }
+    this.closeModal();
   }
 
   deleteSupplier(id: string) {
@@ -117,10 +101,8 @@ export class SuppliersComponent {
   }
 
   openWhatsApp(phone: string) {
-    // Limpiar el número de caracteres no numéricos
+    if (!phone) return;
     const cleanPhone = phone.replace(/\D/g, "");
-    // Asumimos código de país si no lo tiene, o simplemente usamos el número
-    // Para Ecuador suele ser 593
     const formattedPhone = cleanPhone.startsWith("0")
       ? "593" + cleanPhone.substring(1)
       : cleanPhone;

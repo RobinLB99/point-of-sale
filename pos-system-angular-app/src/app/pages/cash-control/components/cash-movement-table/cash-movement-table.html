@@ -1,0 +1,74 @@
+<div
+  class="bg-white rounded-xl border border-grey-olive-200 shadow-sm overflow-hidden"
+>
+  <div
+    class="px-6 py-4 border-b border-grey-olive-100 bg-white flex items-center justify-between"
+  >
+    <h3 class="font-bold text-pale-slate-800">Últimos Movimientos del Día</h3>
+    <button
+      (click)="onExport.emit()"
+      class="text-soft-linen-600 hover:text-soft-linen-700 text-sm font-bold flex items-center gap-1"
+    >
+      <i class="ph-bold ph-download-simple"></i>
+      Exportar
+    </button>
+  </div>
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm text-left min-w-[700px]">
+      <thead
+        class="bg-grey-olive-50 text-grey-olive-600 font-bold uppercase text-[10px] tracking-widest"
+      >
+        <tr>
+          <th class="px-6 py-4">Hora</th>
+          <th class="px-6 py-4">Tipo</th>
+          <th class="px-6 py-4">Descripción</th>
+          <th class="px-6 py-4 text-right">Monto</th>
+          <th class="px-6 py-4">Usuario</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-grey-olive-100">
+        <tr
+          *ngFor="let movement of movements()"
+          class="hover:bg-grey-olive-50/50 transition-colors group"
+        >
+          <td class="px-6 py-4 text-grey-olive-500 font-medium">
+            {{ movement.time }}
+          </td>
+          <td class="px-6 py-4">
+            <span
+              class="px-2 py-1 rounded text-[10px] font-black tracking-tighter"
+              [ngClass]="{
+                'bg-red-100 text-red-700': movement.type === 'SALIDA',
+                'bg-green-100 text-green-700': movement.type === 'ENTRADA',
+                'bg-pale-slate-100 text-pale-slate-700': movement.type === 'INICIO'
+              }"
+            >
+              {{ movement.type }}
+            </span>
+          </td>
+          <td class="px-6 py-4 font-semibold text-pale-slate-700">
+            {{ movement.description }}
+          </td>
+          <td
+            class="px-6 py-4 text-right font-black"
+            [ngClass]="movement.amount >= 0 ? 'text-green-600' : 'text-red-600'"
+          >
+            {{ movement.amount > 0 ? '+' : '' }}{{ movement.amount | currency }}
+          </td>
+          <td class="px-6 py-4">
+            <div class="flex items-center gap-2">
+              <div
+                class="w-6 h-6 rounded-full bg-pale-slate-200 flex items-center justify-center text-[10px] font-bold text-pale-slate-600"
+              >
+                {{ movement.user.substring(0, 2).toUpperCase() }}
+              </div>
+              <span class="font-medium text-pale-slate-600"
+                >{{ movement.user }}</span
+              >
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

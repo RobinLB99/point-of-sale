@@ -1,0 +1,102 @@
+<div
+  class="bg-white rounded-xl shadow-sm border border-grey-olive-200 overflow-hidden"
+>
+  <div
+    class="px-6 py-4 border-b border-grey-olive-100 flex items-center justify-between"
+  >
+    <h3 class="font-bold text-pale-slate-800">Directorio de Abastecimiento</h3>
+  </div>
+  <div class="overflow-x-auto">
+    <table class="w-full text-left min-w-200">
+      <thead
+        class="bg-grey-olive-50 text-grey-olive-500 text-[10px] font-black uppercase tracking-[0.15em]"
+      >
+        <tr>
+          <th class="px-6 py-4">Empresa / Marca</th>
+          <th class="px-6 py-4">Vendedor</th>
+          <th class="px-6 py-4">Teléfono</th>
+          <th class="px-6 py-4">Día de Visita</th>
+          <th class="px-6 py-4 text-center">Estado</th>
+          <th class="px-6 py-4 text-right">Acciones</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-grey-olive-100">
+        <tr
+          *ngFor="let supplier of suppliers()"
+          class="hover:bg-grey-olive-50/50 transition-colors group"
+        >
+          <td class="px-6 py-5">
+            <span class="font-bold text-pale-slate-900 block text-base"
+              >{{ supplier.empresa }}</span
+            >
+          </td>
+          <td class="px-6 py-5">
+            <span class="text-sm text-pale-slate-500 font-medium"
+              >{{ supplier.vendedor }}</span
+            >
+          </td>
+          <td class="px-6 py-5">
+            <button
+              (click)="onWhatsApp.emit(supplier.telefono)"
+              class="flex items-center gap-2 group/wa"
+            >
+              <span
+                class="text-sm font-bold text-pale-slate-700 group-hover/wa:text-green-600 transition-colors"
+              >
+                {{ supplier.telefono }}
+              </span>
+              <div
+                class="w-7 h-7 bg-green-100 rounded-full flex items-center justify-center text-green-600 group-hover/wa:bg-green-600 group-hover/wa:text-white transition-all shadow-sm"
+              >
+                <i class="ph-bold ph-whatsapp-logo"></i>
+              </div>
+            </button>
+          </td>
+          <td class="px-6 py-5">
+            <span
+              class="px-3 py-1 bg-pale-slate-100 text-pale-slate-600 rounded-lg text-[10px] font-black uppercase tracking-wider border border-pale-slate-200"
+            >
+              {{ supplier.diaVisita }}
+            </span>
+          </td>
+          <td class="px-6 py-5 text-center">
+            <span
+              class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter"
+              [ngClass]="supplier.activo ? 'bg-green-100 text-green-700' : 'bg-grey-olive-100 text-grey-olive-500'"
+            >
+              {{ supplier.activo ? 'Activo' : 'Inactivo' }}
+            </span>
+          </td>
+          <td class="px-6 py-5 text-right">
+            <div class="flex justify-end gap-1">
+              <button
+                (click)="onEdit.emit(supplier)"
+                class="p-2 text-pale-slate-400 hover:text-soft-linen-600 hover:bg-soft-linen-50 rounded-lg transition-all"
+                title="Editar"
+              >
+                <i class="ph-bold ph-pencil-simple text-lg"></i>
+              </button>
+              <button
+                (click)="onDelete.emit(supplier.id)"
+                class="p-2 text-pale-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
+                title="Eliminar"
+              >
+                <i class="ph-bold ph-trash text-lg"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div *ngIf="suppliers().length === 0" class="p-16 text-center">
+    <div
+      class="w-16 h-16 bg-grey-olive-100 rounded-full flex items-center justify-center mx-auto mb-4 text-grey-olive-300"
+    >
+      <i class="ph ph-truck text-4xl"></i>
+    </div>
+    <p class="text-grey-olive-500 font-medium italic">
+      No se encontraron proveedores con ese nombre o día de visita.
+    </p>
+  </div>
+</div>

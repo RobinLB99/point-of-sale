@@ -1,13 +1,14 @@
 <!-- Mobile Cart Overlay -->
+@if (isOpen()) {
 <div
-  *ngIf="isOpen()"
   (click)="toggle.emit()"
-  class="lg:hidden fixed inset-0 bg-pale-slate-900/60 z-[45] transition-opacity backdrop-blur-sm"
+  class="lg:hidden fixed inset-0 bg-pale-slate-900/60 z-45 transition-opacity backdrop-blur-sm"
 ></div>
+}
 
 <!-- Mobile Cart Panel -->
 <div
-  class="lg:hidden fixed bottom-0 left-0 right-0 bg-white rounded-t-[2rem] shadow-[0_-15px_35px_-5px_rgba(0,0,0,0.15)] z-[50] transform transition-transform duration-300 ease-out panel-container flex flex-col"
+  class="lg:hidden fixed bottom-0 left-0 right-0 bg-white rounded-t-4xl shadow-[0_-15px_35px_-5px_rgba(0,0,0,0.15)] z-50 transform transition-transform duration-300 ease-out panel-container flex flex-col"
   [class.translate-y-0]="isOpen()"
   [class.translate-y-full]="!isOpen()"
 >
@@ -53,7 +54,7 @@
       @for (item of cartItems(); track $index) {
       <div class="flex gap-4 items-center">
         <div
-          class="w-14 h-14 bg-grey-olive-50 rounded-2xl flex items-center justify-center flex-shrink-0 border border-grey-olive-100"
+          class="w-14 h-14 bg-grey-olive-50 rounded-2xl flex items-center justify-center shrink-0 border border-grey-olive-100"
         >
           <i class="ph {{ item.img }} text-2xl text-pale-slate-400"></i>
         </div>
@@ -116,7 +117,7 @@
 
 <!-- Mobile Bottom Bar (Barra Resumen) -->
 <div
-  class="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-grey-olive-100 z-[40] flex items-stretch shadow-[0_-10px_25px_rgba(0,0,0,0.05)] transition-transform duration-300 bottom-bar-safe"
+  class="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-grey-olive-100 z-40 flex items-stretch shadow-[0_-10px_25px_rgba(0,0,0,0.05)] transition-transform duration-300 bottom-bar-safe"
   [class.translate-y-full]="isOpen()"
 >
   <!-- Área táctil expandida para abrir el carrito (Ocupa todo el espacio sobrante) -->

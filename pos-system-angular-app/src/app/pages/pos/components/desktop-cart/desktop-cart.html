@@ -26,7 +26,7 @@
     @for (item of cartItems(); track $index) {
     <div class="flex gap-3 group mb-3">
       <div
-        class="w-10 h-10 bg-grey-olive-100 rounded-lg flex items-center justify-center flex-shrink-0"
+        class="w-10 h-10 bg-grey-olive-100 rounded-lg flex items-center justify-center shrink-0"
       >
         <i class="ph {{ item.img }} text-grey-olive-400"></i>
       </div>
@@ -56,7 +56,7 @@
               <i class="ph-bold ph-minus text-[10px]"></i>
             </button>
             <span
-              class="text-xs font-semibold px-1 min-w-[1.5rem] text-center text-pale-slate-700"
+              class="text-xs font-semibold px-1 min-w-6 text-center text-pale-slate-700"
               >{{ item.cantidad }}</span
             >
             <button

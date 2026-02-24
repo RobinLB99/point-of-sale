@@ -1,0 +1,125 @@
+<div
+  class="bg-white rounded-xl shadow-sm border border-grey-olive-200 overflow-hidden"
+>
+  <!-- Cabecera de Tabla (Consistente con Suppliers) -->
+  <div
+    class="px-6 py-4 border-b border-grey-olive-100 flex items-center justify-between"
+  >
+    <h3 class="font-bold text-pale-slate-800">Listado Maestro de Clientes</h3>
+  </div>
+
+  <div class="overflow-x-auto">
+    <table class="w-full text-left min-w-[900]">
+      <thead
+        class="bg-grey-olive-50 text-grey-olive-500 text-[10px] font-black uppercase tracking-[0.15em]"
+      >
+        <tr>
+          <th class="px-6 py-4">Nombre / Alias</th>
+          <th class="px-6 py-4">Teléfono</th>
+          <th class="px-6 py-4 text-right">Límite Crédito</th>
+          <th class="px-6 py-4 text-right">Deuda Actual</th>
+          <th class="px-6 py-4 text-center">Estado</th>
+          <th class="px-6 py-4 text-right">Acciones</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-grey-olive-100">
+        @for (customer of customers(); track $index) {
+        <tr
+          class="hover:bg-grey-olive-50/50 transition-colors group"
+        >
+          <td class="px-6 py-5">
+            <span class="font-bold text-pale-slate-900 block text-base"
+              >{{ customer.name }}</span
+            >
+            <span
+              class="text-[10px] text-pale-slate-400 font-bold uppercase tracking-widest"
+              *ngIf="customer.cedula"
+            >
+              CI: {{ customer.cedula }}
+            </span>
+          </td>
+          <td class="px-6 py-5">
+            @if (customer.phone) {
+            <button
+              (click)="onWhatsApp.emit(customer.phone)"
+              class="flex items-center gap-2 group/wa"
+            >
+              <span
+                class="text-sm font-bold text-pale-slate-700 group-hover/wa:text-green-600 transition-colors"
+              >
+                {{ customer.phone }}
+              </span>
+              <div
+                class="w-7 h-7 bg-green-100 rounded-full flex items-center justify-center text-green-600 group-hover/wa:bg-green-600 group-hover/wa:text-white transition-all shadow-sm"
+              >
+                <i class="ph-bold ph-whatsapp-logo"></i>
+              </div>
+            </button>
+            }
+            @if (!customer.phone) {
+            <span
+              class="text-pale-slate-300 italic text-xs"
+              >No registrado</span
+            >
+            }
+          </td>
+          <td class="px-6 py-5 text-right font-bold text-pale-slate-600">
+            {{ customer.creditLimit | currency }}
+          </td>
+          <td
+            class="px-6 py-5 text-right font-black"
+            [ngClass]="customer.currentDebt > 0 ? 'text-orange-600' : 'text-pale-slate-400'"
+          >
+            {{ customer.currentDebt | currency }}
+          </td>
+          <td class="px-6 py-5 text-center">
+            <span
+              class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter"
+              [ngClass]="{
+                'bg-green-100 text-green-700': customer.status === 'al-dia',
+                'bg-orange-100 text-orange-700': customer.status === 'con-deuda',
+                'bg-red-100 text-red-700': customer.status === 'bloqueado'
+              }"
+            >
+              {{ customer.status === 'al-dia' ? 'AL DÍA' : (customer.status ===
+              'con-deuda' ? 'CON DEUDA' : 'BLOQUEADO') }}
+            </span>
+          </td>
+          <td class="px-6 py-5 text-right">
+            <div class="flex justify-end gap-1">
+              <button
+                (click)="onEdit.emit(customer)"
+                class="p-2 text-pale-slate-400 hover:text-soft-linen-600 hover:bg-soft-linen-50 rounded-lg transition-all"
+                title="Editar"
+              >
+                <i class="ph-bold ph-pencil-simple text-lg"></i>
+              </button>
+              <button
+                (click)="onDelete.emit(customer.id)"
+                class="p-2 text-pale-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
+                title="Eliminar"
+              >
+                <i class="ph-bold ph-trash text-lg"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Estado Vacío (Consistente) -->
+  @if (customers().length === 0) {
+  <div class="p-16 text-center">
+    <div
+      class="w-16 h-16 bg-grey-olive-100 rounded-full flex items-center justify-center mx-auto mb-4 text-grey-olive-300"
+    >
+      <i class="ph ph-users text-4xl"></i>
+    </div>
+    <p class="text-grey-olive-500 font-medium italic">
+      No se encontraron clientes con ese nombre o criterio de búsqueda.
+    </p>
+  </div>
+  }
+</div>

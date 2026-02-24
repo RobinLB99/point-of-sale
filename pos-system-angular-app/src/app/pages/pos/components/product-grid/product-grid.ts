@@ -5,81 +5,8 @@ import { CartService } from "../../../../services/cart.service";
 @Component({
   selector: "app-product-grid",
   standalone: true,
-  imports: [CommonModule, CurrencyPipe],
-  template: `
-    <div class="relative min-h-[200px]">
-      <div
-        class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 sm:gap-4"
-      >
-        @for (p of products(); track p.id) {
-          <button
-            (click)="onAddToCart.emit(p)"
-            [disabled]="getStockRemaining(p) <= 0 || !isCashOpen()"
-            class="producto-card bg-white p-2 sm:p-3 rounded-xl border border-grey-olive-200 shadow-sm hover:shadow-lg hover:border-soft-linen-400 hover:-translate-y-1 transition-all group text-left flex flex-col h-full relative overflow-hidden"
-            [class.opacity-50]="getStockRemaining(p) <= 0 || !isCashOpen()"
-            [class.cursor-not-allowed]="
-              getStockRemaining(p) <= 0 || !isCashOpen()
-            "
-            [class.grayscale]="getStockRemaining(p) <= 0 || !isCashOpen()"
-          >
-            <div
-              class="absolute top-2 right-2 text-[10px] font-bold px-2 py-0.5 rounded-full z-10"
-              [ngClass]="{
-                'bg-grey-olive-100 text-grey-olive-600':
-                  getStockRemaining(p) > 0,
-                'bg-red-100 text-red-600': getStockRemaining(p) <= 0,
-              }"
-            >
-              {{
-                getStockRemaining(p) > 0
-                  ? "Stock: " + getStockRemaining(p)
-                  : "Agotado"
-              }}
-            </div>
-
-            <div
-              class="aspect-square bg-grey-olive-50 rounded-lg mb-2 sm:mb-3 flex items-center justify-center text-grey-olive-300 group-hover:bg-soft-linen-50 transition-colors"
-            >
-              <i class="ph {{ p.img }} text-3xl sm:text-4xl"></i>
-            </div>
-
-            <div class="flex-1 min-h-[3rem]">
-              <h4
-                class="font-semibold text-pale-slate-800 text-xs sm:text-sm leading-tight mb-1 line-clamp-2"
-              >
-                {{ p.nombre }}
-              </h4>
-              <p class="text-[10px] sm:text-xs text-grey-olive-500">
-                {{ p.categoria }}
-              </p>
-            </div>
-
-            <div
-              class="mt-2 flex justify-between items-end border-t border-grey-olive-50 pt-2"
-            >
-              <span class="font-bold text-base sm:text-lg text-soft-linen-700">
-                {{ p.precio | currency: "USD" : "symbol" : "1.2-2" }}
-              </span>
-              <div
-                class="w-7 h-7 rounded-full bg-soft-linen-100 text-soft-linen-600 flex items-center justify-center group-hover:bg-soft-linen-600 group-hover:text-white transition-colors shadow-sm"
-              >
-                <i class="ph-bold ph-plus text-xs"></i>
-              </div>
-            </div>
-          </button>
-        }
-      </div>
-
-      @if (products().length === 0) {
-        <div
-          class="flex flex-col items-center justify-center py-20 text-grey-olive-400"
-        >
-          <i class="ph ph-magnifying-glass text-6xl mb-4"></i>
-          <p class="text-lg font-medium">No se encontraron productos</p>
-        </div>
-      }
-    </div>
-  `,
+  imports: [CommonModule],
+  templateUrl: "./product-grid.html",
 })
 export class ProductGridComponent {
   private cartService = inject(CartService);
