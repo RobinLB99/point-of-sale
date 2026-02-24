@@ -63,7 +63,10 @@ export class SidebarComponent {
   }
 
   // Cerrar menú al navegar
-  navigateTo(path: string) {
+  navigateTo(path: string, event?: Event) {
+    if (event) {
+      event.preventDefault();
+    }
     this.isUserMenuOpen.set(false);
     this.router.navigate([path]);
     if (window.innerWidth < 1024) {

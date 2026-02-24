@@ -10,6 +10,7 @@ import { CreditComponent } from "./pages/credit/credit";
 import { ProductsComponent } from "./pages/products/products";
 import { SuppliersComponent } from "./pages/suppliers/suppliers";
 import { CustomersComponent } from "./pages/customers/customers";
+import { UsersComponent } from "./pages/users/users";
 import { ConfiguracionComponent } from "./pages/configuracion/configuracion";
 import { cashClosedGuard } from "./guards/cash-closed.guard";
 
@@ -42,6 +43,10 @@ export const routes: Routes = [
   {
     path: "customers",
     component: CustomersComponent,
+  },
+  {
+    path: "users",
+    component: UsersComponent,
   },
   {
     path: "settings",

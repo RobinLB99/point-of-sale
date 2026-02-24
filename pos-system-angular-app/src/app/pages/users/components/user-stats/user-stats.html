@@ -1,0 +1,76 @@
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+  <!-- Total Usuarios -->
+  <div
+    class="bg-white p-6 rounded-xl border border-grey-olive-200 shadow-sm flex items-center gap-4 group hover:shadow-md transition-shadow min-h-30"
+  >
+    <div
+      class="w-14 h-14 bg-pale-slate-100 rounded-2xl flex items-center justify-center text-pale-slate-600 group-hover:bg-pale-slate-900 group-hover:text-white transition-all shrink-0"
+    >
+      <i class="ph-bold ph-users-four text-2xl"></i>
+    </div>
+    <div class="flex-1 min-w-0">
+      <p
+        class="text-xs font-bold text-grey-olive-400 uppercase tracking-widest truncate"
+      >
+        Total Usuarios
+      </p>
+      <h3 class="text-3xl font-black text-pale-slate-900 leading-none">
+        {{ totalUsers() }}
+      </h3>
+      <p class="text-[10px] font-medium text-pale-slate-400 mt-1">
+        Cuentas registradas en el sistema
+      </p>
+    </div>
+  </div>
+
+  <!-- Usuarios Activos -->
+  <div
+    class="bg-white p-6 rounded-xl border border-grey-olive-200 shadow-sm flex items-center gap-4 group hover:shadow-md transition-shadow min-h-30"
+  >
+    <div
+      class="w-14 h-14 bg-green-50 rounded-2xl flex items-center justify-center text-green-600 group-hover:bg-green-600 group-hover:text-white transition-all shrink-0"
+    >
+      <i class="ph-bold ph-check-circle text-2xl"></i>
+    </div>
+    <div class="flex-1 min-w-0">
+      <p
+        class="text-xs font-bold text-grey-olive-400 uppercase tracking-widest truncate"
+      >
+        Usuarios Activos
+      </p>
+      <h3 class="text-3xl font-black text-pale-slate-900 leading-none">
+        {{ activeUsers() }}
+      </h3>
+      <p class="text-[10px] font-medium text-pale-slate-400 mt-1">
+        Con acceso habilitado al sistema
+      </p>
+    </div>
+  </div>
+
+  <!-- Administradores -->
+  <div
+    class="bg-white p-6 rounded-xl border-2 border-purple-100 shadow-md flex items-center gap-4 relative overflow-hidden group hover:shadow-lg transition-shadow min-h-30"
+  >
+    <div
+      class="absolute top-0 right-0 w-24 h-24 bg-purple-500/5 rounded-full -mr-8 -mt-8"
+    ></div>
+    <div
+      class="w-14 h-14 bg-purple-100 rounded-2xl flex items-center justify-center text-purple-600 group-hover:bg-purple-600 group-hover:text-white transition-all shrink-0"
+    >
+      <i class="ph-bold ph-user-gear text-2xl"></i>
+    </div>
+    <div class="flex-1 min-w-0">
+      <p
+        class="text-xs font-bold text-purple-600 uppercase tracking-widest truncate"
+      >
+        Administradores
+      </p>
+      <h3 class="text-3xl font-black text-purple-700 leading-none">
+        {{ adminUsers() }}
+      </h3>
+      <p class="text-[10px] font-bold text-purple-500 mt-1 italic">
+        Permisos de superusuario
+      </p>
+    </div>
+  </div>
+</div>

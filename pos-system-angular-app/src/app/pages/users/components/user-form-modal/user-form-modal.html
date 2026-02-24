@@ -1,0 +1,136 @@
+<div
+  *ngIf="isOpen()"
+  class="fixed inset-0 z-100 flex items-center justify-center p-4 bg-pale-slate-950/60 backdrop-blur-sm transition-all duration-300"
+>
+  <div
+    class="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-200"
+  >
+    <!-- Cabecera -->
+    <div
+      class="px-8 py-6 border-b border-grey-olive-100 flex items-center justify-between bg-white"
+    >
+      <div>
+        <h3 class="text-xl font-black text-pale-slate-900 leading-none mb-1">
+          {{ user() ? 'Actualizar Usuario' : 'Registrar Usuario' }}
+        </h3>
+        <p class="text-xs text-grey-olive-400 font-medium">
+          Gestión de cuentas y permisos del sistema
+        </p>
+      </div>
+      <button
+        (click)="onClose.emit()"
+        class="w-10 h-10 flex items-center justify-center text-grey-olive-400 hover:text-pale-slate-900 hover:bg-grey-olive-50 rounded-full transition-all"
+      >
+        <i class="ph-bold ph-x text-2xl"></i>
+      </button>
+    </div>
+
+    <!-- Cuerpo (Formulario) -->
+    <form [formGroup]="userForm" (ngSubmit)="submit()" class="p-8 space-y-6">
+      <div class="space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label
+              class="block text-xs font-black text-pale-slate-500 uppercase tracking-widest mb-2"
+              >Nombre Completo</label
+            >
+            <input
+              type="text"
+              formControlName="name"
+              placeholder="Ej. Juan Pérez"
+              class="w-full px-4 py-3 bg-grey-olive-50 border border-grey-olive-200 rounded-xl focus:ring-2 focus:ring-soft-linen-500 focus:border-soft-linen-500 outline-none transition-all font-semibold"
+            />
+          </div>
+          <div>
+            <label
+              class="block text-xs font-black text-pale-slate-500 uppercase tracking-widest mb-2"
+              >Nombre de Usuario</label
+            >
+            <input
+              type="text"
+              formControlName="username"
+              placeholder="Ej. jperez"
+              class="w-full px-4 py-3 bg-grey-olive-50 border border-grey-olive-200 rounded-xl focus:ring-2 focus:ring-soft-linen-500 focus:border-soft-linen-500 outline-none transition-all font-semibold"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label
+            class="block text-xs font-black text-pale-slate-500 uppercase tracking-widest mb-2"
+            >Email (Opcional)</label
+          >
+          <input
+            type="email"
+            formControlName="email"
+            placeholder="usuario@dominio.com"
+            class="w-full px-4 py-3 bg-grey-olive-50 border border-grey-olive-200 rounded-xl focus:ring-2 focus:ring-soft-linen-500 focus:border-soft-linen-500 outline-none transition-all font-semibold"
+          />
+        </div>
+
+        <div>
+          <label
+            class="block text-xs font-black text-pale-slate-500 uppercase tracking-widest mb-2"
+            >Contraseña</label
+          >
+          <input
+            type="password"
+            formControlName="password"
+            [placeholder]="user() ? 'Dejar en blanco para no cambiar' : 'Requerida'"
+            class="w-full px-4 py-3 bg-grey-olive-50 border border-grey-olive-200 rounded-xl focus:ring-2 focus:ring-soft-linen-500 focus:border-soft-linen-500 outline-none transition-all font-semibold"
+          />
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label
+              class="block text-xs font-black text-pale-slate-500 uppercase tracking-widest mb-2"
+              >Rol del Usuario</label
+            >
+            <select
+              formControlName="role"
+              class="w-full px-4 py-3 bg-grey-olive-50 border border-grey-olive-200 rounded-xl focus:ring-2 focus:ring-soft-linen-500 focus:border-soft-linen-500 outline-none transition-all font-semibold cursor-pointer appearance-none"
+            >
+              <option value="cashier">Cajero</option>
+              <option value="manager">Gerente</option>
+              <option value="admin">Administrador</option>
+            </select>
+          </div>
+          <div>
+            <label
+              class="block text-xs font-black text-pale-slate-500 uppercase tracking-widest mb-2"
+              >Estado</label
+            >
+            <select
+              formControlName="status"
+              class="w-full px-4 py-3 bg-grey-olive-50 border border-grey-olive-200 rounded-xl focus:ring-2 focus:ring-soft-linen-500 focus:border-soft-linen-500 outline-none transition-all font-semibold cursor-pointer appearance-none"
+            >
+              <option value="active">Activo</option>
+              <option value="inactive">Inactivo</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pie del Modal -->
+      <div
+        class="pt-6 flex items-center justify-end gap-4 border-t border-grey-olive-100"
+      >
+        <button
+          type="button"
+          (click)="onClose.emit()"
+          class="px-6 py-3 text-sm font-bold text-pale-slate-400 hover:text-pale-slate-600 transition-colors"
+        >
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          [disabled]="userForm.invalid"
+          class="px-10 py-3 bg-soft-linen-600 text-white rounded-xl text-sm font-black uppercase tracking-widest hover:bg-soft-linen-700 transition-all shadow-lg shadow-soft-linen-500/20 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {{ user() ? 'Guardar Cambios' : 'Confirmar Registro' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

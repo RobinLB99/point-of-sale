@@ -25,12 +25,13 @@
       Caja Abierta
     </div>
     } @else {
-    <div
-      class="flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest bg-rose-50 text-rose-600 border border-rose-200 shadow-sm"
+    <button
+      (click)="navigateToOpenCash()"
+      class="flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest bg-rose-50 text-rose-600 border border-rose-200 shadow-sm cursor-pointer hover:bg-rose-100 active:scale-95 transition-all"
     >
       <span class="w-2 h-2 rounded-full bg-rose-500"></span>
       Caja Cerrada
-    </div>
+    </button>
     }
   </div>
 

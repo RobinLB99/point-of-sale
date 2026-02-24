@@ -1,0 +1,37 @@
+<div
+  class="flex flex-col h-full overflow-hidden relative bg-grey-olive-50 font-sans"
+>
+  <!-- Header Estándar -->
+  <app-page-header title="Administración de Usuarios"></app-page-header>
+
+  <!-- Contenido Scrollable -->
+  <div class="flex-1 overflow-y-auto custom-scrollbar p-4 lg:p-8 scroll-smooth">
+    <app-user-stats
+      [totalUsers]="totalUsers()"
+      [activeUsers]="activeUsers()"
+      [adminUsers]="adminUsers()"
+    />
+
+    <!-- Barra de Acciones -->
+    <app-user-action-bar
+      [(searchTerm)]="searchTerm"
+      [(selectedRole)]="selectedRole"
+      (onAddUser)="openNewUserModal()"
+    />
+
+    <!-- Tabla de Datos -->
+    <app-user-table
+      [users]="filteredUsers()"
+      (onEdit)="openEditUserModal($event)"
+      (onDelete)="deleteUser($event)"
+    />
+  </div>
+</div>
+
+<!-- Modal Interactivo: Nuevo / Editar Usuario -->
+<app-user-form-modal
+  [isOpen]="isModalOpen()"
+  [user]="editingUser()"
+  (onClose)="closeModal()"
+  (onSave)="saveUser($event)"
+/>

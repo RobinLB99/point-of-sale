@@ -53,37 +53,45 @@
       </h3>
       <div class="space-y-1">
         <a
+          (click)="navigateTo('/dashboard', $event)"
           routerLink="/dashboard"
           routerLinkActive="bg-soft-linen-600 text-white !shadow-soft-linen-900/10"
           [routerLinkActiveOptions]="{ exact: true }"
           class="flex items-center px-4 py-3 text-pale-slate-400 hover:text-white hover:bg-pale-slate-800 rounded-xl transition-all duration-200"
+          role="button"
         >
           <i class="ph-bold ph-squares-four text-lg mr-3"></i>
           <span class="font-semibold text-sm">Dashboard</span>
         </a>
 
         <a
+          (click)="navigateTo('/pos', $event)"
           routerLink="/pos"
           routerLinkActive="bg-soft-linen-600 text-white !shadow-soft-linen-900/10"
           class="flex items-center px-4 py-3 text-pale-slate-400 hover:text-white hover:bg-pale-slate-800 rounded-xl transition-all duration-200"
+          role="button"
         >
           <i class="ph-bold ph-shopping-cart text-lg mr-3"></i>
           <span class="font-semibold text-sm">Punto de Venta</span>
         </a>
 
         <a
+          (click)="navigateTo('/movements', $event)"
           routerLink="/movements"
           routerLinkActive="bg-soft-linen-600 text-white !shadow-soft-linen-900/10"
           class="flex items-center px-4 py-3 text-pale-slate-400 hover:text-white hover:bg-pale-slate-800 rounded-xl transition-all duration-200"
+          role="button"
         >
           <i class="ph-bold ph-cash-register text-lg mr-3"></i>
           <span class="font-semibold text-sm">Caja & Movimientos</span>
         </a>
 
         <a
+          (click)="navigateTo('/credits', $event)"
           routerLink="/credits"
           routerLinkActive="bg-soft-linen-600 text-white !shadow-soft-linen-900/10"
           class="flex items-center px-4 py-3 text-pale-slate-400 hover:text-white hover:bg-pale-slate-800 rounded-xl transition-all duration-200"
+          role="button"
         >
           <div class="mr-3 relative">
             <i class="ph-bold ph-notebook text-lg"></i>
@@ -104,17 +112,21 @@
       </h3>
       <div class="space-y-1">
         <a
+          (click)="navigateTo('/products', $event)"
           routerLink="/products"
           routerLinkActive="bg-soft-linen-600 text-white !shadow-soft-linen-900/10"
           class="flex items-center px-4 py-3 text-pale-slate-400 hover:text-white hover:bg-pale-slate-800 rounded-xl transition-all duration-200"
+          role="button"
         >
           <i class="ph-bold ph-package text-lg mr-3"></i>
           <span class="font-semibold text-sm">Productos</span>
         </a>
         <a
+          (click)="navigateTo('/suppliers', $event)"
           routerLink="/suppliers"
           routerLinkActive="bg-soft-linen-600 text-white !shadow-soft-linen-900/10"
           class="flex items-center px-4 py-3 text-pale-slate-400 hover:text-white hover:bg-pale-slate-800 rounded-xl transition-all duration-200"
+          role="button"
         >
           <i class="ph-bold ph-truck text-lg mr-3"></i>
           <span class="font-semibold text-sm">Proveedores</span>
@@ -130,9 +142,11 @@
       </h3>
       <div class="space-y-1">
         <a
+          (click)="navigateTo('/customers', $event)"
           routerLink="/customers"
           routerLinkActive="bg-soft-linen-600 text-white !shadow-soft-linen-900/10"
           class="flex items-center px-4 py-3 text-pale-slate-400 hover:text-white hover:bg-pale-slate-800 rounded-xl transition-all duration-200"
+          role="button"
         >
           <i class="ph-bold ph-users text-lg mr-3"></i>
           <span class="font-semibold text-sm">Clientes</span>
