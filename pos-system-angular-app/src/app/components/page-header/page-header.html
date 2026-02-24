@@ -1,7 +1,8 @@
 <header
-  class="h-16 bg-white border-b border-grey-olive-200 flex items-center justify-between px-4 lg:px-8 shadow-sm relative z-10 shrink-0"
+  class="h-16 bg-white border-b border-grey-olive-200 flex items-center px-4 lg:px-8 shadow-sm relative z-10 shrink-0"
 >
-  <div class="flex items-center">
+  <!-- Left: Title -->
+  <div class="flex-1 flex items-center">
     <button
       (click)="toggleSidebar()"
       class="lg:hidden text-pale-slate-700 p-2 -ml-2 rounded-md hover:bg-grey-olive-100 focus:outline-none"
@@ -14,5 +15,31 @@
     </h1>
   </div>
 
-  <ng-content select="[actions]"></ng-content>
+  <!-- Center: Cash Status -->
+  <div class="hidden md:flex items-center justify-center">
+    @if (cashControlService.isCashOpen()) {
+    <div
+      class="flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest bg-emerald-50 text-emerald-600 border border-emerald-200 shadow-sm"
+    >
+      <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+      Caja Abierta
+    </div>
+    } @else {
+    <div
+      class="flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest bg-rose-50 text-rose-600 border border-rose-200 shadow-sm"
+    >
+      <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+      Caja Cerrada
+    </div>
+    }
+  </div>
+
+  <!-- Right: Actions -->
+  <div class="flex-1 flex items-center justify-end gap-2 lg:gap-4">
+    <ng-content select="[actions]"></ng-content>
+
+    <div class="h-8 w-px bg-grey-olive-200 hidden sm:block"></div>
+
+    <app-notification-center></app-notification-center>
+  </div>
 </header>

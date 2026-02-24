@@ -1,0 +1,124 @@
+<div class="relative">
+  <!-- Botón de la Campana -->
+  <button
+    (click)="toggleNotifications()"
+    class="relative p-2 rounded-full text-pale-slate-700 hover:bg-grey-olive-100 hover:text-pale-slate-900 transition-all focus:outline-none"
+    [class.bg-grey-olive-100]="isOpen()"
+  >
+    <i class="ph ph-bell text-2xl"></i>
+
+    @if (notificationService.unreadCount() > 0) {
+    <span
+      class="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 text-[10px] font-bold text-white ring-2 ring-white"
+    >
+      {{ notificationService.unreadCount() }}
+    </span>
+    }
+  </button>
+
+  <!-- Panel de Notificaciones -->
+  @if (isOpen()) {
+  <div
+    class="absolute right-0 mt-2 w-80 sm:w-96 max-h-[500px] overflow-hidden rounded-xl border border-grey-olive-200 bg-white shadow-xl flex flex-col z-50 animate-in fade-in slide-in-from-top-2 duration-200"
+  >
+    <!-- Header del Panel -->
+    <div
+      class="flex items-center justify-between px-4 py-3 border-b border-grey-olive-100 bg-grey-olive-50/50"
+    >
+      <h3 class="font-bold text-pale-slate-900">Notificaciones</h3>
+      <button
+        (click)="markAllAsRead()"
+        class="text-xs font-semibold text-emerald-600 hover:text-emerald-700"
+      >
+        Marcar todas como leídas
+      </button>
+    </div>
+
+    <!-- Lista de Notificaciones -->
+    <div class="flex-1 overflow-y-auto">
+      @if (notificationService.notifications().length === 0) {
+      <div
+        class="flex flex-col items-center justify-center py-12 px-6 text-center"
+      >
+        <div
+          class="w-12 h-12 rounded-full bg-grey-olive-100 flex items-center justify-center mb-3"
+        >
+          <i class="ph ph-bell-slash text-2xl text-pale-slate-400"></i>
+        </div>
+        <p class="text-sm font-medium text-pale-slate-900">
+          No hay notificaciones
+        </p>
+        <p class="text-xs text-pale-slate-500 mt-1">
+          Te avisaremos cuando pase algo importante.
+        </p>
+      </div>
+      } @else {
+      <div class="divide-y divide-grey-olive-50">
+        @for (notif of notificationService.notifications(); track notif.id) {
+        <div
+          class="group relative flex gap-3 p-4 transition-colors hover:bg-grey-olive-50 cursor-pointer"
+          [class.bg-emerald-50/20]="!notif.isRead"
+          (click)="markAsRead(notif.id)"
+        >
+          <!-- Icono de Tipo -->
+          <div
+            class="shrink-0 w-10 h-10 rounded-full flex items-center justify-center text-xl"
+            [class]="getIconForType(notif.type)"
+          >
+            <i
+              class="ph"
+              [class]="getIconForType(notif.type).split(' ')[0]"
+            ></i>
+          </div>
+
+          <!-- Contenido -->
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between gap-2 mb-1">
+              <span class="text-sm font-bold text-pale-slate-900 truncate"
+                >{{ notif.title }}</span
+              >
+              <span class="text-[10px] text-pale-slate-400 whitespace-nowrap"
+                >{{ notif.timestamp | date:'shortTime' }}</span
+              >
+            </div>
+            <p class="text-xs text-pale-slate-600 line-clamp-2 leading-relaxed">
+              {{ notif.message }}
+            </p>
+          </div>
+
+          <!-- Botón de Borrar (aparece al hover) -->
+          <button
+            (click)="deleteNotification(notif.id, $event)"
+            class="opacity-0 group-hover:opacity-100 p-1.5 rounded-md text-pale-slate-400 hover:bg-rose-50 hover:text-rose-600 transition-all shrink-0"
+          >
+            <i class="ph ph-trash text-sm"></i>
+          </button>
+
+          <!-- Indicador de No Leída -->
+          @if (!notif.isRead) {
+          <span
+            class="absolute top-4 right-4 w-2 h-2 rounded-full bg-emerald-500"
+          ></span>
+          }
+        </div>
+        }
+      </div>
+      }
+    </div>
+
+    <!-- Footer (Opcional) -->
+    @if (notificationService.notifications().length > 0) {
+    <div
+      class="px-4 py-2 border-t border-grey-olive-100 bg-grey-olive-50/30 text-center"
+    >
+      <button
+        (click)="notificationService.clearAll()"
+        class="text-xs text-rose-500 hover:underline"
+      >
+        Limpiar historial
+      </button>
+    </div>
+    }
+  </div>
+  }
+</div>
