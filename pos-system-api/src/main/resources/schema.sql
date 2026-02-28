@@ -7,23 +7,62 @@
 -- =============================================================
 
 -- =============================================================
--- TIPOS ENUM
+-- TIPOS ENUM (Idempotentes)
 -- =============================================================
 
-CREATE TYPE rol_usuario          AS ENUM ('ADMIN', 'CAJA', 'INVENTARIO', 'CONTABILIDAD');
-CREATE TYPE accion_auditoria     AS ENUM ('INSERT', 'UPDATE', 'DELETE');
-CREATE TYPE estado_caja          AS ENUM ('ABIERTA', 'CERRADA');
-CREATE TYPE estado_venta         AS ENUM ('PAGADA', 'CREDITO', 'ANULADA');
-CREATE TYPE tipo_movimiento_caja AS ENUM ('INGRESO', 'EGRESO', 'AJUSTE');
-CREATE TYPE tipo_movimiento_inv  AS ENUM ('ENTRADA', 'SALIDA', 'AJUSTE');
-CREATE TYPE tipo_notificacion    AS ENUM (
-    'STOCK_BAJO',
-    'CREDITO_VENCIDO',
-    'LIMITE_CREDITO',
-    'CAJA_ABIERTA',
-    'AJUSTE_INVENTARIO'
-);
-CREATE TYPE rol_destino_notif    AS ENUM ('ADMIN', 'CAJA', 'INVENTARIO', 'CONTABILIDAD', 'TODOS');
+DO $$ BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'rol_usuario') THEN
+        CREATE TYPE rol_usuario AS ENUM ('ADMIN', 'CAJA', 'INVENTARIO', 'CONTABILIDAD');
+    END IF;
+END $$^^
+
+DO $$ BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'accion_auditoria') THEN
+        CREATE TYPE accion_auditoria AS ENUM ('INSERT', 'UPDATE', 'DELETE');
+    END IF;
+END $$^^
+
+DO $$ BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'estado_caja') THEN
+        CREATE TYPE estado_caja AS ENUM ('ABIERTA', 'CERRADA');
+    END IF;
+END $$^^
+
+DO $$ BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'estado_venta') THEN
+        CREATE TYPE estado_venta AS ENUM ('PAGADA', 'CREDITO', 'ANULADA');
+    END IF;
+END $$^^
+
+DO $$ BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'tipo_movimiento_caja') THEN
+        CREATE TYPE tipo_movimiento_caja AS ENUM ('INGRESO', 'EGRESO', 'AJUSTE');
+    END IF;
+END $$^^
+
+DO $$ BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'tipo_movimiento_inv') THEN
+        CREATE TYPE tipo_movimiento_inv AS ENUM ('ENTRADA', 'SALIDA', 'AJUSTE');
+    END IF;
+END $$^^
+
+DO $$ BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'tipo_notificacion') THEN
+        CREATE TYPE tipo_notificacion AS ENUM (
+            'STOCK_BAJO',
+            'CREDITO_VENCIDO',
+            'LIMITE_CREDITO',
+            'CAJA_ABIERTA',
+            'AJUSTE_INVENTARIO'
+        );
+    END IF;
+END $$^^
+
+DO $$ BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'rol_destino_notif') THEN
+        CREATE TYPE rol_destino_notif AS ENUM ('ADMIN', 'CAJA', 'INVENTARIO', 'CONTABILIDAD', 'TODOS');
+    END IF;
+END $$^^
 
 -- =============================================================
 -- USUARIOS Y SEGURIDAD
@@ -33,10 +72,16 @@ CREATE TABLE IF NOT EXISTS Usuario (
     id_usuario     BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     nombre         TEXT        NOT NULL,
     usuario        TEXT        NOT NULL UNIQUE,
-    rol            rol_usuario NOT NULL,
+    password       TEXT        NOT NULL,
     activo         BOOLEAN     NOT NULL DEFAULT TRUE,
     fecha_registro TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
+)^^
+
+CREATE TABLE IF NOT EXISTS Usuario_Rol (
+    id_usuario BIGINT      NOT NULL REFERENCES Usuario(id_usuario),
+    rol        rol_usuario NOT NULL,
+    PRIMARY KEY (id_usuario, rol)
+)^^
 
 CREATE TABLE IF NOT EXISTS Auditoria (
     id_auditoria   BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -47,7 +92,7 @@ CREATE TABLE IF NOT EXISTS Auditoria (
     valor_anterior JSONB,
     valor_nuevo    JSONB,
     fecha          TIMESTAMPTZ      NOT NULL DEFAULT NOW()
-);
+)^^
 
 -- =============================================================
 -- CLIENTES Y PROVEEDORES
@@ -59,7 +104,7 @@ CREATE TABLE IF NOT EXISTS Cliente (
     telefono       TEXT          NOT NULL,
     limite_credito NUMERIC(10,2) NOT NULL DEFAULT 0,
     activo         BOOLEAN       NOT NULL DEFAULT TRUE
-);
+)^^
 
 CREATE TABLE IF NOT EXISTS Proveedor (
     id_proveedor BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -68,7 +113,7 @@ CREATE TABLE IF NOT EXISTS Proveedor (
     telefono     TEXT    NOT NULL,
     dia_visita   TEXT    NOT NULL,
     activo       BOOLEAN NOT NULL DEFAULT TRUE
-);
+)^^
 
 -- =============================================================
 -- IVA
@@ -78,7 +123,7 @@ CREATE TABLE IF NOT EXISTS IVA (
     id_iva      BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     descripcion TEXT         NOT NULL,
     porcentaje  NUMERIC(5,2) NOT NULL
-);
+)^^
 
 -- =============================================================
 -- CATEGORIAS
@@ -88,7 +133,7 @@ CREATE TABLE IF NOT EXISTS Categoria (
     id_categoria BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     nombre       TEXT NOT NULL UNIQUE,
     descripcion  TEXT
-);
+)^^
 
 -- =============================================================
 -- UNIDADES DE MEDIDA
@@ -98,7 +143,7 @@ CREATE TABLE IF NOT EXISTS UnidadMedida (
     id_unidad BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     nombre    TEXT NOT NULL,
     simbolo   TEXT NOT NULL
-);
+)^^
 
 -- =============================================================
 -- INVENTARIO
@@ -115,7 +160,7 @@ CREATE TABLE IF NOT EXISTS Producto (
     id_unidad_base  BIGINT        NOT NULL REFERENCES UnidadMedida(id_unidad),
     id_iva          BIGINT        NOT NULL REFERENCES IVA(id_iva),
     id_proveedor    BIGINT        REFERENCES Proveedor(id_proveedor)
-);
+)^^
 
 CREATE TABLE IF NOT EXISTS ProductoUnidad (
     id_producto_unidad BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -126,7 +171,7 @@ CREATE TABLE IF NOT EXISTS ProductoUnidad (
     activo             BOOLEAN       NOT NULL DEFAULT TRUE,
 
     UNIQUE(id_producto, id_unidad)
-);
+)^^
 
 CREATE TABLE IF NOT EXISTS MovimientoInventario (
     id_movimiento  BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -138,7 +183,7 @@ CREATE TABLE IF NOT EXISTS MovimientoInventario (
     referencia     TEXT,
     fecha          TIMESTAMPTZ         NOT NULL DEFAULT NOW(),
     id_usuario     BIGINT              NOT NULL REFERENCES Usuario(id_usuario)
-);
+)^^
 
 -- =============================================================
 -- CAJA
@@ -153,7 +198,7 @@ CREATE TABLE IF NOT EXISTS Caja (
     estado              estado_caja   NOT NULL DEFAULT 'ABIERTA',
     id_usuario_apertura BIGINT        NOT NULL REFERENCES Usuario(id_usuario),
     id_usuario_cierre   BIGINT        REFERENCES Usuario(id_usuario)
-);
+)^^
 
 CREATE TABLE IF NOT EXISTS MovimientoCaja (
     id_movimiento BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -163,7 +208,7 @@ CREATE TABLE IF NOT EXISTS MovimientoCaja (
     monto         NUMERIC(10,2)        NOT NULL,
     fecha         TIMESTAMPTZ          NOT NULL DEFAULT NOW(),
     id_usuario    BIGINT               NOT NULL REFERENCES Usuario(id_usuario)
-);
+)^^
 
 -- =============================================================
 -- VENTAS
@@ -179,7 +224,7 @@ CREATE TABLE IF NOT EXISTS Venta (
     total      NUMERIC(10,2) NOT NULL DEFAULT 0,
     estado     estado_venta  NOT NULL DEFAULT 'PAGADA',
     id_usuario BIGINT        NOT NULL REFERENCES Usuario(id_usuario)
-);
+)^^
 
 CREATE TABLE IF NOT EXISTS DetalleVenta (
     id_detalle         BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -192,7 +237,7 @@ CREATE TABLE IF NOT EXISTS DetalleVenta (
     costo_unitario     NUMERIC(10,2) NOT NULL,
     iva_porcentaje     NUMERIC(5,2)  NOT NULL,  -- snapshot histórico
     total_linea        NUMERIC(10,2) NOT NULL   -- cantidad * precio_unitario
-);
+)^^
 
 -- =============================================================
 -- PAGOS
@@ -206,7 +251,7 @@ CREATE TABLE IF NOT EXISTS Pago (
     fecha       TIMESTAMPTZ   NOT NULL DEFAULT NOW(),
     observacion TEXT,
     id_usuario  BIGINT        NOT NULL REFERENCES Usuario(id_usuario)
-);
+)^^
 
 -- =============================================================
 -- NOTIFICACIONES
@@ -220,7 +265,7 @@ CREATE TABLE IF NOT EXISTS Notificacion (
     id_referencia    BIGINT,
     tabla_referencia TEXT,
     fecha            TIMESTAMPTZ       NOT NULL DEFAULT NOW()
-);
+)^^
 
 CREATE TABLE IF NOT EXISTS NotificacionUsuario (
     id              BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -230,33 +275,34 @@ CREATE TABLE IF NOT EXISTS NotificacionUsuario (
     fecha_lectura   TIMESTAMPTZ,
 
     UNIQUE(id_notificacion, id_usuario)
-);
+)^^
 
 -- =============================================================
 -- ÍNDICES
 -- =============================================================
 
-CREATE INDEX IF NOT EXISTS idx_usuario_activo        ON Usuario(activo);
-CREATE INDEX IF NOT EXISTS idx_usuario_rol           ON Usuario(rol);
-CREATE INDEX IF NOT EXISTS idx_auditoria_usuario     ON Auditoria(id_usuario);
-CREATE INDEX IF NOT EXISTS idx_auditoria_tabla       ON Auditoria(tabla);
-CREATE INDEX IF NOT EXISTS idx_cliente_activo        ON Cliente(activo);
-CREATE INDEX IF NOT EXISTS idx_proveedor_activo      ON Proveedor(activo);
-CREATE INDEX IF NOT EXISTS idx_producto_categoria    ON Producto(id_categoria);
-CREATE INDEX IF NOT EXISTS idx_producto_proveedor    ON Producto(id_proveedor);
-CREATE INDEX IF NOT EXISTS idx_producto_activo       ON Producto(activo);
-CREATE INDEX IF NOT EXISTS idx_movInv_producto       ON MovimientoInventario(id_producto);
-CREATE INDEX IF NOT EXISTS idx_movInv_fecha          ON MovimientoInventario(fecha);
-CREATE INDEX IF NOT EXISTS idx_movCaja_caja          ON MovimientoCaja(id_caja);
-CREATE INDEX IF NOT EXISTS idx_venta_cliente         ON Venta(id_cliente);
-CREATE INDEX IF NOT EXISTS idx_venta_caja            ON Venta(id_caja);
-CREATE INDEX IF NOT EXISTS idx_venta_fecha           ON Venta(fecha);
-CREATE INDEX IF NOT EXISTS idx_venta_estado          ON Venta(estado);
-CREATE INDEX IF NOT EXISTS idx_detalleVenta_venta    ON DetalleVenta(id_venta);
-CREATE INDEX IF NOT EXISTS idx_detalleVenta_producto ON DetalleVenta(id_producto);
-CREATE INDEX IF NOT EXISTS idx_pago_venta            ON Pago(id_venta);
-CREATE INDEX IF NOT EXISTS idx_notifUsr_usuario      ON NotificacionUsuario(id_usuario);
-CREATE INDEX IF NOT EXISTS idx_notifUsr_leida        ON NotificacionUsuario(leida);
+CREATE INDEX IF NOT EXISTS idx_usuario_activo        ON Usuario(activo)^^
+CREATE INDEX IF NOT EXISTS idx_usuarioRol_usuario    ON Usuario_Rol(id_usuario)^^
+CREATE INDEX IF NOT EXISTS idx_usuarioRol_rol        ON Usuario_Rol(rol)^^
+CREATE INDEX IF NOT EXISTS idx_auditoria_usuario     ON Auditoria(id_usuario)^^
+CREATE INDEX IF NOT EXISTS idx_auditoria_tabla       ON Auditoria(tabla)^^
+CREATE INDEX IF NOT EXISTS idx_cliente_activo        ON Cliente(activo)^^
+CREATE INDEX IF NOT EXISTS idx_proveedor_activo      ON Proveedor(activo)^^
+CREATE INDEX IF NOT EXISTS idx_producto_categoria    ON Producto(id_categoria)^^
+CREATE INDEX IF NOT EXISTS idx_producto_proveedor    ON Producto(id_proveedor)^^
+CREATE INDEX IF NOT EXISTS idx_producto_activo       ON Producto(activo)^^
+CREATE INDEX IF NOT EXISTS idx_movInv_producto       ON MovimientoInventario(id_producto)^^
+CREATE INDEX IF NOT EXISTS idx_movInv_fecha          ON MovimientoInventario(fecha)^^
+CREATE INDEX IF NOT EXISTS idx_movCaja_caja          ON MovimientoCaja(id_caja)^^
+CREATE INDEX IF NOT EXISTS idx_venta_cliente         ON Venta(id_cliente)^^
+CREATE INDEX IF NOT EXISTS idx_venta_caja            ON Venta(id_caja)^^
+CREATE INDEX IF NOT EXISTS idx_venta_fecha           ON Venta(fecha)^^
+CREATE INDEX IF NOT EXISTS idx_venta_estado          ON Venta(estado)^^
+CREATE INDEX IF NOT EXISTS idx_detalleVenta_venta    ON DetalleVenta(id_venta)^^
+CREATE INDEX IF NOT EXISTS idx_detalleVenta_producto ON DetalleVenta(id_producto)^^
+CREATE INDEX IF NOT EXISTS idx_pago_venta            ON Pago(id_venta)^^
+CREATE INDEX IF NOT EXISTS idx_notifUsr_usuario      ON NotificacionUsuario(id_usuario)^^
+CREATE INDEX IF NOT EXISTS idx_notifUsr_leida        ON NotificacionUsuario(leida)^^
 
 -- =============================================================
 -- FUNCIONES Y TRIGGERS
@@ -273,11 +319,12 @@ BEGIN
     END IF;
     RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql^^
 
+DROP TRIGGER IF EXISTS trg_validar_stock ON DetalleVenta^^
 CREATE TRIGGER trg_validar_stock
 BEFORE INSERT ON DetalleVenta
-FOR EACH ROW EXECUTE FUNCTION fn_validar_stock();
+FOR EACH ROW EXECUTE FUNCTION fn_validar_stock()^^
 
 -- -------------------------------------------------------------
 -- 2. Descontar stock y registrar movimiento de inventario
@@ -307,11 +354,12 @@ BEGIN
 
     RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql^^
 
+DROP TRIGGER IF EXISTS trg_descontar_stock ON DetalleVenta^^
 CREATE TRIGGER trg_descontar_stock
 AFTER INSERT ON DetalleVenta
-FOR EACH ROW EXECUTE FUNCTION fn_descontar_stock();
+FOR EACH ROW EXECUTE FUNCTION fn_descontar_stock()^^
 
 -- -------------------------------------------------------------
 -- 3. Recalcular subtotal, impuestos y total en Venta
@@ -337,11 +385,12 @@ BEGIN
 
     RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql^^
 
+DROP TRIGGER IF EXISTS trg_recalcular_venta_insert ON DetalleVenta^^
 CREATE TRIGGER trg_recalcular_venta_insert
 AFTER INSERT ON DetalleVenta
-FOR EACH ROW EXECUTE FUNCTION fn_recalcular_venta();
+FOR EACH ROW EXECUTE FUNCTION fn_recalcular_venta()^^
 
 -- -------------------------------------------------------------
 -- 4. Restaurar stock si una Venta se anula
@@ -377,11 +426,12 @@ BEGIN
     END IF;
     RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql^^
 
+DROP TRIGGER IF EXISTS trg_restaurar_stock_anulacion ON Venta^^
 CREATE TRIGGER trg_restaurar_stock_anulacion
 AFTER UPDATE OF estado ON Venta
-FOR EACH ROW EXECUTE FUNCTION fn_restaurar_stock_anulacion();
+FOR EACH ROW EXECUTE FUNCTION fn_restaurar_stock_anulacion()^^
 
 -- -------------------------------------------------------------
 -- 5. Notificar stock bajo
@@ -408,18 +458,20 @@ BEGIN
         RETURNING id_notificacion INTO v_notif_id;
 
         INSERT INTO NotificacionUsuario (id_notificacion, id_usuario)
-        SELECT v_notif_id, id_usuario
-        FROM Usuario
-        WHERE rol = 'ADMIN' AND activo = TRUE;
+        SELECT DISTINCT v_notif_id, u.id_usuario
+        FROM Usuario u
+        JOIN Usuario_Rol ur ON ur.id_usuario = u.id_usuario
+        WHERE ur.rol = 'ADMIN' AND u.activo = TRUE;
 
     END IF;
     RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql^^
 
+DROP TRIGGER IF EXISTS trg_notificar_stock_bajo ON Producto^^
 CREATE TRIGGER trg_notificar_stock_bajo
 AFTER UPDATE OF stock ON Producto
-FOR EACH ROW EXECUTE FUNCTION fn_notificar_stock_bajo();
+FOR EACH ROW EXECUTE FUNCTION fn_notificar_stock_bajo()^^
 
 -- -------------------------------------------------------------
 -- 6. Distribuir notificacion a usuarios al insertarla
@@ -438,19 +490,21 @@ BEGIN
 
     ELSIF NEW.rol_destino != 'ADMIN' THEN
         INSERT INTO NotificacionUsuario (id_notificacion, id_usuario)
-        SELECT NEW.id_notificacion, id_usuario
-        FROM Usuario
-        WHERE activo = TRUE
-          AND rol = NEW.rol_destino;
+        SELECT DISTINCT NEW.id_notificacion, u.id_usuario
+        FROM Usuario u
+        JOIN Usuario_Rol ur ON ur.id_usuario = u.id_usuario
+        WHERE u.activo = TRUE
+          AND ur.rol::text = NEW.rol_destino::text;
     END IF;
 
     RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql^^
 
+DROP TRIGGER IF EXISTS trg_distribuir_notificacion ON Notificacion^^
 CREATE TRIGGER trg_distribuir_notificacion
 AFTER INSERT ON Notificacion
-FOR EACH ROW EXECUTE FUNCTION fn_distribuir_notificacion();
+FOR EACH ROW EXECUTE FUNCTION fn_distribuir_notificacion()^^
 
 -- -------------------------------------------------------------
 -- 7. Validar que la Caja esté abierta antes de registrar Venta
@@ -463,11 +517,12 @@ BEGIN
     END IF;
     RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql^^
 
+DROP TRIGGER IF EXISTS trg_validar_caja_venta ON Venta^^
 CREATE TRIGGER trg_validar_caja_venta
 BEFORE INSERT ON Venta
-FOR EACH ROW EXECUTE FUNCTION fn_validar_caja_venta();
+FOR EACH ROW EXECUTE FUNCTION fn_validar_caja_venta()^^
 
 -- -------------------------------------------------------------
 -- 8. Validar límite de crédito del cliente antes de Venta
@@ -497,11 +552,12 @@ BEGIN
     END IF;
     RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql^^
 
+DROP TRIGGER IF EXISTS trg_validar_limite_credito ON Venta^^
 CREATE TRIGGER trg_validar_limite_credito
 BEFORE INSERT ON Venta
-FOR EACH ROW EXECUTE FUNCTION fn_validar_limite_credito();
+FOR EACH ROW EXECUTE FUNCTION fn_validar_limite_credito()^^
 
 -- =============================================================
 -- VISTAS
@@ -517,7 +573,7 @@ SELECT
 FROM Cliente c
 LEFT JOIN Venta v ON v.id_cliente = c.id_cliente AND v.estado = 'CREDITO'
 LEFT JOIN Pago  p ON p.id_venta   = v.id_venta
-GROUP BY c.id_cliente, c.nombre, c.limite_credito;
+GROUP BY c.id_cliente, c.nombre, c.limite_credito^^
 
 CREATE OR REPLACE VIEW v_stock_producto AS
 SELECT
@@ -531,7 +587,7 @@ SELECT
     p.activo
 FROM Producto p
 LEFT JOIN Categoria    cat ON cat.id_categoria = p.id_categoria
-JOIN      UnidadMedida u   ON u.id_unidad      = p.id_unidad_base;
+JOIN      UnidadMedida u   ON u.id_unidad      = p.id_unidad_base^^
 
 CREATE OR REPLACE VIEW v_cierre_caja AS
 SELECT
@@ -549,13 +605,12 @@ SELECT
 FROM Caja c
 LEFT JOIN MovimientoCaja mc ON mc.id_caja = c.id_caja
 GROUP BY c.id_caja, c.fecha_apertura, c.fecha_cierre,
-         c.saldo_inicial, c.saldo_final, c.estado;
+         c.saldo_inicial, c.saldo_final, c.estado^^
 
 CREATE OR REPLACE VIEW v_notificaciones_pendientes AS
 SELECT
     nu.id_usuario,
     u.nombre AS usuario,
-    u.rol,
     n.id_notificacion,
     n.tipo,
     n.mensaje,
@@ -566,7 +621,7 @@ FROM NotificacionUsuario nu
 JOIN Notificacion n ON n.id_notificacion = nu.id_notificacion
 JOIN Usuario      u ON u.id_usuario      = nu.id_usuario
 WHERE nu.leida = FALSE
-ORDER BY n.fecha DESC;
+ORDER BY n.fecha DESC^^
 
 -- =============================================================
 -- FIN DEL SCHEMA

@@ -73,3 +73,6 @@
 /pos-system-api/build/
 !/pos-system-api/**/src/main/**/build/
 !/pos-system-api/**/src/test/**/build/
+
+/pos-system-api/.env
+/pos-system-angular-app/.env
