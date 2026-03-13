@@ -1,8 +1,20 @@
 -- =============================================================
 -- data-dev.sql
 -- Datos iniciales de prueba para el entorno de desarrollo
--- (Excluye Usuarios por solicitud del desarrollador)
 -- =============================================================
+
+-- 0. USUARIOS
+INSERT INTO Usuario (nombre, usuario, password) VALUES
+('Administrador', 'admin', '$2b$12$lrlzmiG6u3yVhnClT2VHeu0JkKkEk5CNwk2G6SBOPH6haODJv5S6C'),
+('Cajero Principal', 'cajero', '$2b$12$LrlVz/cNWRPHf0hSGMwwfuRofQC62ASdGSw9UtAzhk4E/PkUhPzCy'),
+('Bodeguero', 'bodega', '$2b$12$QWeEqDhdLL7a1s2bxzNXGOrS51LWSbQMnwBJvank4RPMoeBiYsXva'),
+('Contador', 'conta', '$2b$12$O1MQ221WRqQfK55RZ9Lnb.Efjhzf..kRiAwSd/Fv.zZRu4dnDO0ea')^^
+
+INSERT INTO Usuario_Rol (id_usuario, rol) VALUES
+(1, 'ADMIN'),
+(2, 'CAJA'),
+(3, 'INVENTARIO'),
+(4, 'CONTABILIDAD')^^
 
 -- 1. CLIENTES
 INSERT INTO Cliente (nombre, telefono, limite_credito, activo) VALUES
