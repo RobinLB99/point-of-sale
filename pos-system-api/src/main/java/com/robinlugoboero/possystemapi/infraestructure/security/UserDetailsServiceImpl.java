@@ -2,7 +2,9 @@ package com.robinlugoboero.possystemapi.infraestructure.security;
 
 import com.robinlugoboero.possystemapi.domain.model.entity.Usuario;
 import com.robinlugoboero.possystemapi.domain.repository.UsuarioRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -24,15 +26,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         new UsernameNotFoundException("Usuario no encontrado: " + username)
       );
 
-    String[] roles = usuario
+    // Mapeamos los roles con el prefijo ROLE_ explícito
+    List<SimpleGrantedAuthority> authorities = usuario
       .getRoles()
       .stream()
-      .map(Enum::name)
-      .toArray(String[]::new);
+      .map(rol -> new SimpleGrantedAuthority("ROLE_" + rol.name()))
+      .toList();
 
     return User.withUsername(usuario.getUsuario())
       .password(usuario.getPassword())
-      .roles(roles)
+      .authorities(authorities)
       .disabled(!usuario.isActivo())
       .build();
   }
