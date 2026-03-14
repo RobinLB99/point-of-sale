@@ -5,10 +5,12 @@ import {
   ElementRef,
   HostListener,
   viewChild,
+  computed,
 } from "@angular/core";
 import { RouterLink, RouterLinkActive, Router } from "@angular/router";
 import { UIService } from "../../services/ui.service";
 import { CommonModule } from "@angular/common";
+import { UserService } from "../../services/user.service";
 
 @Component({
   selector: "app-sidebar",
@@ -18,22 +20,35 @@ import { CommonModule } from "@angular/common";
   styleUrl: "./sidebar.css",
 })
 export class SidebarComponent {
-  uiService = inject(UIService);
-  router = inject(Router);
-  elementRef = inject(ElementRef);
+  private uiService = inject(UIService);
+  private userService = inject(UserService);
+  private router = inject(Router);
+  private elementRef = inject(ElementRef);
 
   userMenuContainer = viewChild<ElementRef>("userMenuContainer");
 
   isOpen = this.uiService.sidebarOpen;
   isUserMenuOpen = signal(false);
 
-  // Datos del usuario (Mock)
-  currentUser = {
-    name: "Juan Dueño",
-    role: "Administrador",
-    email: "juan.dueno@mitienda.com",
-    initials: "JD",
-  };
+  // Datos del usuario REALES del servicio
+  currentUserState = this.userService.currentUser;
+
+  // Computamos las iniciales y datos para la UI de forma segura
+  currentUser = computed(() => {
+    const user = this.currentUserState();
+    if (!user) return null;
+
+    return {
+      ...user,
+      initials: user.name
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .substring(0, 2)
+        .toUpperCase(),
+      email: `${user.username}@sistema.com`, // O el campo real si lo añades al modelo
+    };
+  });
 
   toggleSidebar() {
     this.uiService.toggleSidebar();
@@ -45,8 +60,9 @@ export class SidebarComponent {
   }
 
   logout() {
-    console.log("Cerrando sesión...");
+    console.warn("Cerrando sesión...");
     this.isUserMenuOpen.set(false);
+    this.userService.logout(); // <-- AQUÍ SE LIMPIA TODO
     this.router.navigate(["/login"]);
   }
 
@@ -64,9 +80,6 @@ export class SidebarComponent {
 
   // Cerrar menú al navegar
   navigateTo(path: string, event?: Event) {
-    if (event) {
-      event.preventDefault();
-    }
     this.isUserMenuOpen.set(false);
     this.router.navigate([path]);
     if (window.innerWidth < 1024) {

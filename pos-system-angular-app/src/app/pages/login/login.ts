@@ -7,6 +7,7 @@ import {
   Validators,
 } from "@angular/forms";
 import { Router } from "@angular/router";
+import { UserService } from "../../services/user.service";
 
 @Component({
   selector: "app-login",
@@ -18,13 +19,15 @@ import { Router } from "@angular/router";
 export class LoginComponent {
   private fb = inject(FormBuilder);
   private router = inject(Router);
+  private userService = inject(UserService);
 
   // Signals para manejar estados locales
   isLoading = signal(false);
   showPassword = signal(false);
+  errorMessage = signal<string | null>(null);
 
   loginForm: FormGroup = this.fb.group({
-    username: ["", [Validators.required, Validators.minLength(5)]],
+    username: ["", [Validators.required, Validators.minLength(4)]],
     password: ["", [Validators.required, Validators.minLength(6)]],
   });
 
@@ -35,14 +38,19 @@ export class LoginComponent {
   onSubmit() {
     if (this.loginForm.valid) {
       this.isLoading.set(true);
+      this.errorMessage.set(null);
 
-      console.log("Intento de login:", this.loginForm.value);
-
-      // Simulamos una latencia de red para ver el efecto de carga
-      setTimeout(() => {
-        this.isLoading.set(false);
-        this.router.navigate(["/dashboard"]);
-      }, 1500);
+      this.userService.login(this.loginForm.value).subscribe({
+        next: () => {
+          this.isLoading.set(false);
+          this.router.navigate(["/dashboard"]);
+        },
+        error: (err) => {
+          this.isLoading.set(false);
+          this.errorMessage.set("Credenciales incorrectas o error en el servidor.");
+          console.error("Error en login:", err);
+        }
+      });
     } else {
       this.loginForm.markAllAsTouched();
     }
