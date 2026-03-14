@@ -156,6 +156,7 @@
   </nav>
 
   <!-- User Section -->
+  @if (currentUser()) {
   <div
     #userMenuContainer
     class="p-4 bg-pale-slate-950 border-t border-pale-slate-800 relative"
@@ -172,16 +173,16 @@
         <div
           class="w-16 h-16 rounded-full bg-soft-linen-600 flex items-center justify-center text-xl font-bold text-white shadow-xl shadow-soft-linen-900/20 border-2 border-pale-slate-800"
         >
-          {{ currentUser.initials }}
+          {{ currentUser()?.initials }}
         </div>
         <div class="space-y-0.5">
-          <p class="font-bold text-white">{{ currentUser.name }}</p>
-          <p class="text-xs text-pale-slate-500">{{ currentUser.email }}</p>
+          <p class="font-bold text-white">{{ currentUser()?.name }}</p>
+          <p class="text-xs text-pale-slate-500">{{ currentUser()?.email }}</p>
         </div>
         <div
           class="px-3 py-1 bg-soft-linen-600/10 text-soft-linen-500 rounded-full text-[10px] font-black uppercase tracking-widest border border-soft-linen-600/20"
         >
-          {{ currentUser.role }}
+          {{ currentUser()?.role }}
         </div>
       </div>
 
@@ -242,7 +243,7 @@
           class="w-10 h-10 rounded-full bg-pale-slate-700 flex items-center justify-center text-xs font-bold text-white border-2 border-pale-slate-900 group-hover:border-pale-slate-800 transition-all shadow-sm"
           [class.border-soft-linen-600]="isUserMenuOpen()"
         >
-          {{ currentUser.initials }}
+          {{ currentUser()?.initials }}
         </div>
         <span
           class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-pale-slate-900 group-hover:border-pale-slate-800 rounded-full"
@@ -250,10 +251,10 @@
       </div>
       <div class="flex-1 min-w-0 text-left">
         <p class="font-semibold text-sm text-white truncate">
-          {{ currentUser.name }}
+          {{ currentUser()?.name }}
         </p>
         <p class="text-[11px] text-pale-slate-500 truncate">
-          {{ currentUser.role }}
+          {{ currentUser()?.role }}
         </p>
       </div>
       <i
@@ -262,4 +263,5 @@
       ></i>
     </button>
   </div>
+  }
 </aside>
