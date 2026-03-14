@@ -31,7 +31,7 @@ public class TokenService {
     JwtClaimsSet claims = JwtClaimsSet.builder()
       .issuer("pos-system-api")
       .issuedAt(now)
-      .expiresAt(now.plus(10, ChronoUnit.HOURS))
+      .expiresAt(now.plus(5, ChronoUnit.HOURS))
       .subject(authentication.getName())
       .claim("scope", scope)
       .build();

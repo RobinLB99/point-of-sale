@@ -14,6 +14,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -42,19 +43,43 @@ public class SecurityConfig {
 
   private final UserDetailsServiceImpl userDetailsService;
 
+  /**
+   * CADENA 1: Recursos Públicos (Swagger, Login, H2)
+   * En Spring Security 7.0, PathPatternRequestMatcher es el motor por defecto.
+   * IMPORTANTE: No incluyas el context-path (/api) en las rutas; Security 7 lo maneja solo.
+   */
   @Bean
-  public SecurityFilterChain securityFilterChain(HttpSecurity http)
+  @Order(1)
+  public SecurityFilterChain publicSecurityFilterChain(HttpSecurity http)
+    throws Exception {
+    return http
+      .securityMatcher(
+        "/auth/login",
+        "/v3/api-docs/**",
+        "/swagger-ui/**",
+        "/swagger-ui.html"
+      )
+      .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+      .csrf(AbstractHttpConfigurer::disable)
+      .headers(headers -> headers.frameOptions(frame -> frame.disable()))
+      .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+      .sessionManagement(session ->
+        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+      )
+      .build();
+  }
+
+  /**
+   * CADENA 2: API Protegida con OAuth2/JWT
+   */
+  @Bean
+  @Order(2)
+  public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http)
     throws Exception {
     return http
       .cors(cors -> cors.configurationSource(corsConfigurationSource()))
       .csrf(AbstractHttpConfigurer::disable)
-      .authorizeHttpRequests(auth ->
-        auth
-          .requestMatchers("/auth/login")
-          .permitAll()
-          .anyRequest()
-          .authenticated()
-      )
+      .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
       .sessionManagement(session ->
         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
       )
