@@ -197,7 +197,8 @@ CREATE TABLE IF NOT EXISTS Caja (
     saldo_final         NUMERIC(10,2),            -- NULL hasta el cierre
     estado              estado_caja   NOT NULL DEFAULT 'ABIERTA',
     id_usuario_apertura BIGINT        NOT NULL REFERENCES Usuario(id_usuario),
-    id_usuario_cierre   BIGINT        REFERENCES Usuario(id_usuario)
+    id_usuario_cierre   BIGINT        REFERENCES Usuario(id_usuario),
+    notas_apertura		TEXT
 )^^
 
 CREATE TABLE IF NOT EXISTS MovimientoCaja (
