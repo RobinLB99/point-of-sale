@@ -36,6 +36,12 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+/**
+ * Configuración maestra de seguridad del sistema POS.
+ * Implementa un modelo de seguridad basado en OAuth2 con tokens JWT, utilizando
+ * criptografía asimétrica (RSA) para la firma y verificación de tokens.
+ * Define dos cadenas de filtros principales para separar el tráfico público del protegido.
+ */
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -44,9 +50,13 @@ public class SecurityConfig {
   private final UserDetailsServiceImpl userDetailsService;
 
   /**
-   * CADENA 1: Recursos Públicos (Swagger, Login, H2)
-   * En Spring Security 7.0, PathPatternRequestMatcher es el motor por defecto.
-   * IMPORTANTE: No incluyas el context-path (/api) en las rutas; Security 7 lo maneja solo.
+   * Primera Cadena de Seguridad: Acceso Público.
+   * Maneja endpoints que no requieren autenticación previa como el login,
+   * documentación técnica (Swagger) y consola H2.
+   *
+   * @param http Configuración de seguridad HTTP.
+   * @return SecurityFilterChain configurada para recursos públicos.
+   * @throws Exception en caso de errores de configuración.
    */
   @Bean
   @Order(1)
@@ -70,7 +80,12 @@ public class SecurityConfig {
   }
 
   /**
-   * CADENA 2: API Protegida con OAuth2/JWT
+   * Segunda Cadena de Seguridad: API Protegida.
+   * Aplica autenticación JWT obligatoria para el resto de la aplicación.
+   *
+   * @param http Configuración de seguridad HTTP.
+   * @return SecurityFilterChain configurada para recursos protegidos.
+   * @throws Exception en caso de errores de configuración.
    */
   @Bean
   @Order(2)
@@ -92,6 +107,12 @@ public class SecurityConfig {
       .build();
   }
 
+  /**
+   * Configura la extracción de autoridades (roles) desde el token JWT.
+   * Mapea el claim 'scope' a autoridades con prefijo 'ROLE_'.
+   *
+   * @return Convertidor de autenticación JWT.
+   */
   @Bean
   public JwtAuthenticationConverter jwtAuthenticationConverter() {
     JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter =
@@ -107,6 +128,12 @@ public class SecurityConfig {
     return jwtAuthenticationConverter;
   }
 
+  /**
+   * Configuración de CORS (Cross-Origin Resource Sharing).
+   * Define los orígenes permitidos (Frontend) y métodos HTTP autorizados.
+   *
+   * @return Fuente de configuración CORS.
+   */
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
@@ -128,16 +155,35 @@ public class SecurityConfig {
 
   // --- INFRAESTRUCTURA JWT (RSA) ---
 
+  /**
+   * Decodificador de tokens JWT utilizando la llave pública RSA.
+   *
+   * @param rsaKey Llave RSA configurada.
+   * @return JwtDecoder instancia.
+   * @throws Exception si hay problemas de conversión.
+   */
   @Bean
   public JwtDecoder jwtDecoder(RSAKey rsaKey) throws Exception {
     return NimbusJwtDecoder.withPublicKey(rsaKey.toRSAPublicKey()).build();
   }
 
+  /**
+   * Codificador de tokens JWT para la generación de nuevos tokens.
+   *
+   * @param jwkSource Fuente de llaves JWK.
+   * @return JwtEncoder instancia.
+   */
   @Bean
   public JwtEncoder jwtEncoder(JWKSource<SecurityContext> jwkSource) {
     return new NimbusJwtEncoder(jwkSource);
   }
 
+  /**
+   * Fuente de llaves para el codificador.
+   *
+   * @param rsaKey Llave maestra RSA.
+   * @return JWKSource instancia.
+   */
   @Bean
   public JWKSource<SecurityContext> jwkSource(RSAKey rsaKey) {
     JWK jwk = rsaKey;
@@ -145,6 +191,12 @@ public class SecurityConfig {
     return (jwkSelector, securityContext) -> jwkSelector.select(jwkSet);
   }
 
+  /**
+   * Construye el objeto RSAKey a partir del par de llaves generado.
+   *
+   * @param keyPair Par de llaves RSA.
+   * @return RSAKey instancia con ID único.
+   */
   @Bean
   public RSAKey rsaKey(KeyPair keyPair) {
     return new RSAKey.Builder((RSAPublicKey) keyPair.getPublic())
@@ -153,6 +205,12 @@ public class SecurityConfig {
       .build();
   }
 
+  /**
+   * Generador de pares de llaves RSA de 2048 bits.
+   * IMPORTANTE: En producción, estas llaves deben persistirse o cargarse de un almacén seguro.
+   *
+   * @return KeyPair con llaves pública y privada.
+   */
   @Bean
   public KeyPair keyPair() {
     try {
@@ -166,6 +224,12 @@ public class SecurityConfig {
 
   // --- AUTH BEANS ---
 
+  /**
+   * Proveedor de autenticación basado en base de datos.
+   * Vincula nuestro UserDetailsService y el codificador de contraseñas.
+   *
+   * @return AuthenticationProvider configurado.
+   */
   @Bean
   public AuthenticationProvider authenticationProvider() {
     DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(
@@ -175,6 +239,13 @@ public class SecurityConfig {
     return authProvider;
   }
 
+  /**
+   * Manager encargado de orquestar los procesos de autenticación.
+   *
+   * @param config Configuración global de autenticación.
+   * @return AuthenticationManager instancia.
+   * @throws Exception si no se puede obtener el manager.
+   */
   @Bean
   public AuthenticationManager authenticationManager(
     AuthenticationConfiguration config
@@ -182,6 +253,12 @@ public class SecurityConfig {
     return config.getAuthenticationManager();
   }
 
+  /**
+   * Codificador de contraseñas utilizando el algoritmo BCrypt.
+   * Utiliza una fuerza de 12 (costo computacional equilibrado).
+   *
+   * @return PasswordEncoder instancia.
+   */
   @Bean
   public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder(12);

@@ -11,12 +11,25 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+/**
+ * Implementación de UserDetailsService de Spring Security.
+ * Actúa como adaptador entre el repositorio de usuarios del dominio
+ * y el mecanismo de autenticación del framework.
+ */
 @Service
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
   private final UsuarioRepository usuarioRepository;
 
+  /**
+   * Recupera un usuario de la base de datos y lo transforma en un objeto UserDetails.
+   * Realiza el mapeo crítico de los roles de dominio a autoridades de Spring Security.
+   *
+   * @param username Nombre del usuario a autenticar.
+   * @return UserDetails instancia cargada con roles y estado de activación.
+   * @throws UsernameNotFoundException si el usuario no existe en el sistema.
+   */
   @Override
   public UserDetails loadUserByUsername(String username)
     throws UsernameNotFoundException {
@@ -27,6 +40,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
       );
 
     // Mapeamos los roles con el prefijo ROLE_ explícito
+    // Requerido por Spring Security para la validación con hasRole() o @PreAuthorize
     List<SimpleGrantedAuthority> authorities = usuario
       .getRoles()
       .stream()
