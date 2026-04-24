@@ -1,0 +1,78 @@
+# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
+
+# Compiled output
+/pos-system-angular-app/dist
+/pos-system-angular-app/tmp
+/pos-system-angular-app/out-tsc
+/pos-system-angular-app/bazel-out
+
+# Node
+/pos-system-angular-app/node_modules
+/pos-system-angular-appnpm-debug.log
+/pos-system-angular-app/yarn-error.log
+
+# IDEs and editors
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# Visual Studio Code
+/pos-system-angular-app/.vscode/*
+!/pos-system-angular-app/.vscode/settings.json
+!/pos-system-angular-app/.vscode/tasks.json
+!/pos-system-angular-app/.vscode/launch.json
+!/pos-system-angular-app/.vscode/extensions.json
+!/pos-system-angular-app/.vscode/mcp.json
+/pos-system-angular-app/.history/*
+
+# Miscellaneous
+/pos-system-angular-app/.angular/cache
+/pos-system-angular-app/.sass-cache/
+/pos-system-angular-app/connect.lock
+/pos-system-angular-app/coverage
+/pos-system-angular-app/libpeerconnection.log
+/pos-system-angular-app/testem.log
+/pos-system-angular-app/typings
+/pos-system-angular-app/__screenshots__/
+
+# System files
+/pos-system-angular-app/.DS_Store
+/pos-system-angular-app/Thumbs.db
+
+/pos-system-api/HELP.md
+/pos-system-api/target/
+/pos-system-api/.mvn/wrapper/maven-wrapper.jar
+!/pos-system-api/**/src/main/**/target/
+!/pos-system-api/**/src/test/**/target/
+
+### STS ###
+/pos-system-api/.apt_generated
+/pos-system-api/.classpath
+/pos-system-api/.factorypath
+/pos-system-api/.project
+/pos-system-api/.settings
+/pos-system-api/.springBeans
+/pos-system-api/.sts4-cache
+
+### IntelliJ IDEA ###
+/pos-system-api/.idea
+/pos-system-api/*.iws
+/pos-system-api/*.iml
+/pos-system-api/*.ipr
+
+### NetBeans ###
+/pos-system-api/nbproject/private/
+/pos-system-api/nbbuild/
+/pos-system-api/dist/
+/pos-system-api/nbdist/
+/pos-system-api/.nb-gradle/
+/pos-system-api/build/
+!/pos-system-api/**/src/main/**/build/
+!/pos-system-api/**/src/test/**/build/
+
+/pos-system-api/.env
+/pos-system-angular-app/.env
