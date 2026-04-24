@@ -261,12 +261,6 @@ Este proyecto está bajo licencia propietaria. Todos los derechos reservados.
 
 ---
 
-## 🆘 Soporte
-
-Para reportar problemas o solicitar soporte, contactar al equipo de desarrollo.
-
----
-
 ## 📌 Versión
 
 - **Frontend**: 1.0.0
@@ -274,4 +268,4 @@ Para reportar problemas o solicitar soporte, contactar al equipo de desarrollo.
 
 ---
 
-Desarrollado con ❤️ usando Angular y Spring Boot
+Desarrollado usando Angular y Spring Boot
