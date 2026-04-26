@@ -1,4 +1,11 @@
-import { Injectable, signal, computed, inject } from "@angular/core";
+import {
+  Injectable,
+  signal,
+  computed,
+  inject,
+  PLATFORM_ID,
+} from "@angular/core";
+import { isPlatformBrowser } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import { User, AuthUser, AuthResponse } from "../models/user.model";
 import { tap, catchError, of, map } from "rxjs";
@@ -8,12 +15,22 @@ import { tap, catchError, of, map } from "rxjs";
 })
 export class UserService {
   private http = inject(HttpClient);
+  private platformId = inject(PLATFORM_ID);
+  private isBrowser = isPlatformBrowser(this.platformId);
+
   private readonly API_URL = "/api";
   private readonly USER_KEY = "pos_user";
   private readonly TOKEN_KEY = "pos_token";
 
-  private currentUserState = signal<User | null>(this.loadUserFromStorage());
-  private tokenState = signal<string | null>(this.loadTokenFromStorage());
+  private currentUserState = signal<User | null>(null);
+  private tokenState = signal<string | null>(null);
+
+  constructor() {
+    if (this.isBrowser) {
+      this.currentUserState.set(this.loadUserFromStorage());
+      this.tokenState.set(this.loadTokenFromStorage());
+    }
+  }
 
   currentUser = computed(() => this.currentUserState());
   token = computed(() => this.tokenState());
@@ -49,7 +66,9 @@ export class UserService {
       map((authUser) => {
         const user = this.adaptAuthUser(authUser);
         this.currentUserState.set(user);
-        localStorage.setItem(this.USER_KEY, JSON.stringify(user));
+        if (this.isBrowser) {
+          localStorage.setItem(this.USER_KEY, JSON.stringify(user));
+        }
         return user;
       }),
       catchError((error) => {
@@ -62,19 +81,24 @@ export class UserService {
   logout() {
     this.currentUserState.set(null);
     this.tokenState.set(null);
-    localStorage.removeItem(this.USER_KEY);
-    localStorage.removeItem(this.TOKEN_KEY);
-    localStorage.clear();
+    if (this.isBrowser) {
+      localStorage.removeItem(this.USER_KEY);
+      localStorage.removeItem(this.TOKEN_KEY);
+      localStorage.clear();
+    }
   }
 
   private setSession(token: string, user: User) {
     this.tokenState.set(token);
     this.currentUserState.set(user);
-    localStorage.setItem(this.TOKEN_KEY, token);
-    localStorage.setItem(this.USER_KEY, JSON.stringify(user));
+    if (this.isBrowser) {
+      localStorage.setItem(this.TOKEN_KEY, token);
+      localStorage.setItem(this.USER_KEY, JSON.stringify(user));
+    }
   }
 
   private loadUserFromStorage(): User | null {
+    if (!this.isBrowser) return null;
     const stored = localStorage.getItem(this.USER_KEY);
     if (!stored || stored === "null" || stored === "undefined") return null;
     try {
@@ -86,6 +110,7 @@ export class UserService {
   }
 
   private loadTokenFromStorage(): string | null {
+    if (!this.isBrowser) return null;
     const token = localStorage.getItem(this.TOKEN_KEY);
     return token && token !== "null" && token !== "undefined" ? token : null;
   }
