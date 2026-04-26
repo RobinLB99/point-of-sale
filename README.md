@@ -67,12 +67,6 @@ ng build
 
 Los archivos compilados se guardarán en `dist/`.
 
-### Testing
-
-```bash
-ng test
-```
-
 ### Características del Frontend
 
 - ✅ Progressive Web App (PWA) con Service Worker
@@ -88,11 +82,11 @@ ng test
 
 ### Tecnologías
 
-- **Spring Boot** 4.0.3
+- **Spring Boot** 4
 - **Java** 25
 - **Spring Security** con OAuth2 Resource Server
 - **Spring Data JPA**
-- **PostgreSQL** 18.3
+- **PostgreSQL** 18
 - **Lombok**
 - **SpringDoc OpenAPI** (Swagger UI)
 - **Maven**
@@ -220,27 +214,9 @@ El sistema utiliza PostgreSQL con las siguientes entidades principales:
 
 ---
 
-## 🧪 Testing
-
-### Frontend
-
-```bash
-cd pos-system-angular-app
-ng test
-```
-
-### Backend
-
-```bash
-cd pos-system-api
-./mvnw test
-```
-
----
-
 ## 📝 Licencia
 
-Este proyecto está bajo licencia propietaria. Todos los derechos reservados.
+Este proyecto está bajo licencia de código abierto. Todos los derechos reservados.
 
 ---
 
@@ -263,8 +239,8 @@ Este proyecto está bajo licencia propietaria. Todos los derechos reservados.
 
 ## 📌 Versión
 
-- **Frontend**: 1.0.0
-- **Backend**: 1.0.0
+- **Frontend**: 1.0.0-SNAPSHOT
+- **Backend**: 1.0.0-SNAPSHOT
 
 ---
 
