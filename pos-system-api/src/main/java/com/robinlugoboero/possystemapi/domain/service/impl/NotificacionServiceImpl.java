@@ -3,6 +3,9 @@ package com.robinlugoboero.possystemapi.domain.service.impl;
 import com.robinlugoboero.possystemapi.domain.model.entity.Notificacion;
 import com.robinlugoboero.possystemapi.domain.repository.NotificacionRepository;
 import com.robinlugoboero.possystemapi.domain.service.interfaces.NotificacionService;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -10,4 +13,9 @@ public class NotificacionServiceImpl extends AbstractGenericService<Notificacion
     public NotificacionServiceImpl(NotificacionRepository repository) {
         super(repository);
     }
+
+	@Override
+	public Page<Notificacion> getPaginated(Pageable pageable) {
+		return repository.findAll(pageable);
+	}
 }

@@ -3,6 +3,9 @@ package com.robinlugoboero.possystemapi.domain.service.impl;
 import com.robinlugoboero.possystemapi.domain.model.entity.Categoria;
 import com.robinlugoboero.possystemapi.domain.repository.CategoriaRepository;
 import com.robinlugoboero.possystemapi.domain.service.interfaces.CategoriaService;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -10,4 +13,9 @@ public class CategoriaServiceImpl extends AbstractGenericService<Categoria, Cate
     public CategoriaServiceImpl(CategoriaRepository repository) {
         super(repository);
     }
+
+	@Override
+	public Page<Categoria> getPaginated(Pageable pageable) {
+		return repository.findAll(pageable);
+	}
 }
