@@ -20,8 +20,8 @@ Este proyecto es una solución integral para la gestión de puntos de venta, inc
 
 ```
 /workspace
-├── pos-system-angular-app/    # Frontend (Angular 21)
-└── pos-system-api/            # Backend (Spring Boot 4)
+├── frontend/    # Frontend (Angular 21)
+└── backend/            # Backend (Spring Boot 4)
 ```
 
 ---
@@ -40,12 +40,12 @@ Este proyecto es una solución integral para la gestión de puntos de venta, inc
 
 - Node.js 18+ 
 - npm 11.7.0+
-- Angular CLI 21.1.5+
+- Angular CLI 21+
 
 ### Instalación
 
 ```bash
-cd pos-system-angular-app
+cd frontend
 npm install
 ```
 
@@ -102,7 +102,7 @@ Los archivos compilados se guardarán en `dist/`.
 Copiar el archivo de ejemplo y configurar las variables de entorno:
 
 ```bash
-cd pos-system-api
+cd backend
 cp .env.example .env
 ```
 
